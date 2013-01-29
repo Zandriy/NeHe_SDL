@@ -1,0 +1,12 @@
+1) git status -s
+2) git add ...
+3) git commit
+4) connect to SafeRAID 
+~/ShellScripts/sshfs_mac.sh 2 
+5) git push origin master
+
+=======================================
+
+1) git fetch
+2) git status -s
+3) git pull
