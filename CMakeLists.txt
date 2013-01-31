@@ -1,11 +1,12 @@
 cmake_minimum_required (VERSION 2.6)
 project (SDL_OGL)
 
+# Compile Debug version
 SET(CMAKE_CXX_FLAGS "-g")
 
 # The version number.
-set (SDL_OGL_VERSION_MAJOR 2)
-set (SDL_OGL_VERSION_MINOR 5)
+set (SDL_OGL_VERSION_MAJOR 1)
+set (SDL_OGL_VERSION_MINOR 0)
  
 # configure a header file to pass some of the CMake settings
 # to the source code
