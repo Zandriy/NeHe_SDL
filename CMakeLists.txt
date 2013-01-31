@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 2.6)
 project (NeHe)
 
+# Compile Debug version
 SET(CMAKE_CXX_FLAGS "-g")
 
 # The version number.
