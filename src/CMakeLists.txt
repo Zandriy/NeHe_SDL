@@ -19,10 +19,11 @@ ELSE()
 	SET(SDL_MAIN_SOURCE)
 ENDIF()
 
-SET(SDL_OGL_PROJECT_SOURCE
+SET(NeHe_PROJECT_SOURCE
+	prg.cpp
 )
 
-SET(SDL_OGL_PROJECT_TARGET prg)
+SET(NeHe_PROJECT_TARGET prg)
 
 include_directories(
 	${SDL_INCLUDE_DIR}
@@ -34,7 +35,11 @@ link_libraries(
 	${OPENGL_LIBRARY}
 	)
 
+<<<<<<< HEAD
 ADD_EXECUTABLE(${SDL_OGL_PROJECT_TARGET} ${SDL_MAIN_SOURCE} ${SDL_OGL_PROJECT_SOURCE})
+=======
+ADD_EXECUTABLE(${NeHe_PROJECT_TARGET} ${SDL_MAIN_SOURCE} ${NeHe_PROJECT_SOURCE})
+>>>>>>> 6d3970dbbe61e23d05e7cad415f013df7f5dde7e
 
 message("============ INFO ============")
 message("OS: " ${CMAKE_SYSTEM})

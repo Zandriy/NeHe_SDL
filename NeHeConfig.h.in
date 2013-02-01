@@ -1,0 +1,9 @@
+/*
+ *  Created on: Feb 1, 2013
+ *      Author: Andrew Zhabura
+ */
+
+// the configured options and settings for NeHe
+#define NeHe_VERSION_MAJOR @NeHe_VERSION_MAJOR@
+#define NeHe_VERSION_MINOR @NeHe_VERSION_MINOR@
+ 
