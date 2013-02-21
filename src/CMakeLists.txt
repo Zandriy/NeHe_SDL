@@ -25,6 +25,7 @@ SET(NeHe_PROJECT_SOURCE
 	OGLConsumer.cpp
 	Sample_01.cpp
 	Sample_02.cpp
+	Sample_03.cpp
 )
 
 SET(NeHe_PROJECT_TARGET prg)
