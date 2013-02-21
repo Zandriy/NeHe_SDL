@@ -19,7 +19,7 @@ public:
 	virtual void reshape(int width, int height);
 	virtual char* name() const
 	{
-		return (char*)&"02. NeHe's First Polygon Tutorial";
+		return (char*)&"02. NeHe's First Polygon";
 	}
 	virtual int width() const
 	{

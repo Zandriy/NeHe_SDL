@@ -1,25 +1,25 @@
 /*
- * Sample_04.h
+ * Sample_05.h
  *
- *  Created on: Feb 21, 2043
+ *  Created on: Feb 21, 2053
  *      Author: Andrew Zhabura
  */
 
-#ifndef Sample_04_H_
-#define Sample_04_H_
+#ifndef Sample_05_H_
+#define Sample_05_H_
 
 #include "Sample.h"
 
-class Sample_04 : public Sample
+class Sample_05 : public Sample
 {
 public:
-	Sample_04();
-	virtual ~Sample_04();
+	Sample_05();
+	virtual ~Sample_05();
 
 	virtual void reshape(int width, int height);
 	virtual char* name() const
 	{
-		return (char*)&"04. NeHe's Rotation";
+		return (char*)&"05. NeHe's 3D Shapes";
 	}
 	virtual int width() const
 	{
@@ -40,4 +40,4 @@ private:
 	GLfloat     m_rquad;                      // Angle For The Quad     ( NEW )
 };
 
-#endif /* Sample_04_H_ */
+#endif /* Sample_05_H_ */
