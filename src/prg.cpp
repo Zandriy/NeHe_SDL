@@ -5,9 +5,7 @@
  *      Author: Andrew Zhabura
  */
 
-#include <cstdio>
-
-#include <SDL/SDL.h>
+#include "OGLApplication.h"
 #include "NeHeConfig.h"
 
 #if __APPLE__
@@ -17,8 +15,12 @@ int main(int argc, char ** argv)
 #endif
 {
     fprintf(stdout,"Version %d.%d\n",
-    		NeHe_VERSION_MAJOR,
-    		NeHe_VERSION_MINOR);
+            NeHe_VERSION_MAJOR,
+            NeHe_VERSION_MINOR);
 
-	return 0;
+	OGL_Application app;
+
+	app.init();
+
+	return app.exec();
 }

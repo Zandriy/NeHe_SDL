@@ -21,6 +21,9 @@ ENDIF()
 
 SET(NeHe_PROJECT_SOURCE
 	prg.cpp
+	OGLApplication.cpp
+	OGLConsumer.cpp
+	Sample_01.cpp
 )
 
 SET(NeHe_PROJECT_TARGET prg)
@@ -46,4 +49,5 @@ message("SDL LIB: " ${SDL_LIBRARY})
 message("OpenGL LIB: " ${OPENGL_LIBRARY})
 message("==============================")
 message(" !!! always do `pwd -P` before `rm` !!!")
+message(" !!! always do `ls` before `rm` to see what will be removed !!!")
 message("==============================")
