@@ -10,8 +10,9 @@
 #include "OGLConsumer.h"
 
 #include "Sample_01.h"
+#include "Sample_02.h"
 
-#define Sample_QTY 1
+#define Sample_QTY 2
 
 OGL_Consumer::OGL_Consumer()
 :	m_Sample(new Sample * [Sample_QTY])
@@ -20,6 +21,7 @@ OGL_Consumer::OGL_Consumer()
 	int i = -1;
 
 	m_Sample[++i] = new Sample_01;
+	m_Sample[++i] = new Sample_02;
 
 	if ( ++i != Sample_QTY )
 		throw this;
@@ -58,7 +60,17 @@ void OGL_Consumer::drawGLScene()
 	m_Sample[m_SampleNum]->drawGLScene();
 }
 
-char* OGL_Consumer::getSampleName()
+char* OGL_Consumer::sampleName() const
 {
-	return m_Sample[m_SampleNum]->getName();
+	return m_Sample[m_SampleNum]->name();
+}
+
+int OGL_Consumer::width() const
+{
+	return m_Sample[m_SampleNum]->width();
+}
+
+int OGL_Consumer::height() const
+{
+	return m_Sample[m_SampleNum]->height();
 }

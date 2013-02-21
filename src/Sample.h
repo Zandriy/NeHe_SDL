@@ -27,7 +27,9 @@ public:
 	virtual ~Sample(){}
 
 	virtual void reshape(int width, int height) = 0;
-	virtual char* getName() = 0;
+	virtual char* name() const = 0;
+	virtual int width() const = 0;
+	virtual int height() const = 0;
 
 	virtual bool sendMessage(int message, int mode, int x, int y)
 	{

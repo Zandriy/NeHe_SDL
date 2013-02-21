@@ -1,33 +1,33 @@
 /*
- * Sample_01.h
+ * Sample_02.h
  *
- *  Created on: Feb 21, 2013
+ *  Created on: Feb 21, 2023
  *      Author: Andrew Zhabura
  */
 
-#ifndef Sample_01_H_
-#define Sample_01_H_
+#ifndef Sample_02_H_
+#define Sample_02_H_
 
 #include "Sample.h"
 
-class Sample_01 : public Sample
+class Sample_02 : public Sample
 {
 public:
-	Sample_01();
-	virtual ~Sample_01();
+	Sample_02();
+	virtual ~Sample_02();
 
 	virtual void reshape(int width, int height);
 	virtual char* name() const
 	{
-		return (char*)&"01. NeHe's OpenGL Framework";
+		return (char*)&"02. NeHe's First Polygon Tutorial";
 	}
 	virtual int width() const
 	{
-		return 400;
+		return 640;
 	}
 	virtual int height() const
 	{
-		return 300;
+		return 480;
 	}
 
 protected:
@@ -36,4 +36,4 @@ protected:
 	void restoreGL();
 };
 
-#endif /* Sample_01_H_ */
+#endif /* Sample_02_H_ */

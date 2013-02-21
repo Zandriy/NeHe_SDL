@@ -13,7 +13,6 @@
 
 #define INIT_W		500
 #define INIT_H		500
-#define INIT_SAMPLE		0
 
 OGL_Application::OGL_Application()
 :	m_surface (NULL)
@@ -24,9 +23,10 @@ OGL_Application::OGL_Application()
 ,	m_height(INIT_H)
 ,	m_bpp(SURFACE_BPP)
 ,	m_OGL_Consumer(NULL)
-,	m_curSample(INIT_SAMPLE)
+,	m_curSample(0)
 {
-	 m_sampleNum[0] = m_sampleNum[1] = 0;
+	m_sampleNum[0] = '0';
+	m_sampleNum[1] = '1';
 }
 
 OGL_Application::~OGL_Application()
@@ -103,19 +103,17 @@ void OGL_Application::init()
 
 int OGL_Application::exec()
 {
-	// the start Sample
-	m_OGL_Consumer->setSample(m_curSample);
-	SDL_WM_SetCaption(m_OGL_Consumer->getSampleName(), NULL);
-	resizeWindow( INIT_W, INIT_H );
-
 	// used to collect events
 	SDL_Event event;
 
 	// wait for events
 	while ( !m_breakReason )
 	{
-		// handle the events in the queue
+		// draw the scene
+		if ( m_isActive )
+			drawGLScene();
 
+		// handle the events in the queue
 		while ( SDL_PollEvent( &event ) )
 		{
 			switch( event.type )
@@ -154,12 +152,6 @@ int OGL_Application::exec()
 			default:
 				break;
 			}
-		}
-
-		// draw the scene
-		if ( m_isActive )
-		{
-			drawGLScene();
 		}
 	}
 
@@ -218,33 +210,66 @@ void OGL_Application::handleKeyPress( SDL_keysym *keysym )
 	case SDLK_1:
 		num = '1';
 		break;
+	case SDLK_2:
+		num = '2';
+		break;
+	case SDLK_3:
+		num = '3';
+		break;
+	case SDLK_4:
+		num = '4';
+		break;
+	case SDLK_5:
+		num = '5';
+		break;
+	case SDLK_6:
+		num = '6';
+		break;
+	case SDLK_7:
+		num = '7';
+		break;
+	case SDLK_8:
+		num = '8';
+		break;
+	case SDLK_9:
+		num = '9';
+		break;
 	default:
 		break;
 	}
 
 	if (num)
 	{
+		printf("Current sample is ");
 		if ( !m_sampleNum[0] )
+		{
 			m_sampleNum[0] = num;
+			printf("%c*\n", m_sampleNum[0]);
+		}
 		else
 		{
 			m_sampleNum[1] = num;
-
-			m_curSample = m_sampleNum[0] - 48;
-			m_curSample += (m_sampleNum[1] - 48);
-			m_sampleNum[0] = m_sampleNum[1] = 0;
-
-			m_OGL_Consumer->setSample(m_curSample-1);
-			resizeWindow( 800, 600 );
+			printf("%c%c\n", m_sampleNum[0], m_sampleNum[1]);
 		}
 	}
 
-	SDL_WM_SetCaption(m_OGL_Consumer->getSampleName(), NULL);
 }
 
 // Here goes our drawing code
 void OGL_Application::drawGLScene()
 {
+	if ( m_sampleNum[0] && m_sampleNum[1] )
+	{
+		m_curSample = (m_sampleNum[0] - 48) * 10;
+		m_curSample += (m_sampleNum[1] - 48);
+		m_sampleNum[0] = m_sampleNum[1] = 0;
+		--m_curSample;
+
+		m_OGL_Consumer->setSample(m_curSample);
+		resizeWindow( m_OGL_Consumer->width(), m_OGL_Consumer->height() );
+		SDL_WM_SetCaption(m_OGL_Consumer->sampleName(), NULL);
+	}
+
 	// These are to calculate our fps
 	// static Uint32 T0     = 0;
 	// static Uint32 Frames = 0;

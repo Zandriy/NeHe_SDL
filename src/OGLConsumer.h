@@ -19,7 +19,9 @@ public:
 	bool sendMessage(unsigned int SampleNum, int message, int mode, int x, int y);
 	void reshape(unsigned int width, unsigned int height);
 	void drawGLScene();
-	char* getSampleName();
+	char* sampleName() const;
+	int width() const;
+	int height() const;
 
 private:
 	Sample ** m_Sample;
