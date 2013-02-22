@@ -18,9 +18,6 @@ public:
 	~OGL_Application();
 	void init();
 	int exec();
-	bool resizeWindow( int width, int height );
-	void handleKeyPress( SDL_keysym *keysym );
-	void drawGLScene();
 private:
 	SDL_Surface *m_surface;
 	unsigned int  m_videoFlags;
@@ -32,6 +29,11 @@ private:
 	OGL_Consumer * m_OGL_Consumer;
 	unsigned int  m_curSample;
 	char m_sampleNum[2];
+
+	void setSample();
+	bool resizeWindow( int width, int height );
+	void handleKeyPress( SDL_keysym *keysym );
+	void drawGLScene();
 };
 
 #endif // OGL_APPLICATION_H_

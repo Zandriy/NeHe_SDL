@@ -13,6 +13,7 @@
 
 #define INIT_W		500
 #define INIT_H		500
+#define UNEXISTSAMP 10000
 
 OGL_Application::OGL_Application()
 :	m_surface (NULL)
@@ -23,7 +24,7 @@ OGL_Application::OGL_Application()
 ,	m_height(INIT_H)
 ,	m_bpp(SURFACE_BPP)
 ,	m_OGL_Consumer(NULL)
-,	m_curSample(0)
+,	m_curSample(UNEXISTSAMP)
 {
 	m_sampleNum[0] = '0';
 	m_sampleNum[1] = '1';
@@ -99,6 +100,7 @@ void OGL_Application::init()
 	}
 
 	m_OGL_Consumer = new OGL_Consumer;
+	setSample();
 }
 
 int OGL_Application::exec()
@@ -252,24 +254,38 @@ void OGL_Application::handleKeyPress( SDL_keysym *keysym )
 			printf("%c%c\n", m_sampleNum[0], m_sampleNum[1]);
 		}
 	}
+	setSample();
+}
 
+// Here goes our drawing code
+void OGL_Application::setSample()
+{
+	unsigned int  newSample;
+
+	if ( m_sampleNum[0] && m_sampleNum[1] )
+	{
+		newSample = (m_sampleNum[0] - 48) * 10;
+		newSample += (m_sampleNum[1] - 48);
+		--newSample;
+
+		if ( newSample != m_curSample && m_OGL_Consumer->setSample(newSample) )
+		{
+			m_curSample = newSample;
+			SDL_WM_SetCaption(m_OGL_Consumer->sampleName(), NULL);
+			resizeWindow( m_OGL_Consumer->width(), m_OGL_Consumer->height() );
+		}
+		else
+		{
+			printf("Sample %c%c doesn't exist\n", m_sampleNum[0], m_sampleNum[1]);
+		}
+
+		m_sampleNum[0] = m_sampleNum[1] = 0;
+	}
 }
 
 // Here goes our drawing code
 void OGL_Application::drawGLScene()
 {
-	if ( m_sampleNum[0] && m_sampleNum[1] )
-	{
-		m_curSample = (m_sampleNum[0] - 48) * 10;
-		m_curSample += (m_sampleNum[1] - 48);
-		m_sampleNum[0] = m_sampleNum[1] = 0;
-		--m_curSample;
-
-		m_OGL_Consumer->setSample(m_curSample);
-		resizeWindow( m_OGL_Consumer->width(), m_OGL_Consumer->height() );
-		SDL_WM_SetCaption(m_OGL_Consumer->sampleName(), NULL);
-	}
-
 	// These are to calculate our fps
 	// static Uint32 T0     = 0;
 	// static Uint32 Frames = 0;

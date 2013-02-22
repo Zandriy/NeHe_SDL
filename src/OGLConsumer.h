@@ -15,7 +15,7 @@ class OGL_Consumer
 public:
 	OGL_Consumer();
 	~OGL_Consumer();
-	void setSample(unsigned int SampleNum);
+	bool setSample(unsigned int SampleNum);
 	bool sendMessage(unsigned int SampleNum, int message, int mode, int x, int y);
 	void reshape(unsigned int width, unsigned int height);
 	void drawGLScene();

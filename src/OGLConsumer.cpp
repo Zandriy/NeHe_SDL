@@ -41,12 +41,13 @@ OGL_Consumer::~OGL_Consumer()
 	}
 }
 
-void OGL_Consumer::setSample(unsigned int SampleNum)
+bool OGL_Consumer::setSample(unsigned int SampleNum)
 {
 	if (SampleNum >= Sample_QTY)
-		return;
+		return false;
 
 	m_SampleNum = SampleNum;
+	return true;
 }
 
 bool OGL_Consumer::sendMessage(unsigned int SampleNum, int message, int mode, int x, int y)
