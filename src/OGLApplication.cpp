@@ -13,7 +13,7 @@
 
 #define INIT_W		500
 #define INIT_H		500
-#define UNEXISTSAMP 10000
+#define NONEXISTENT_SAMPLE 10000
 
 OGL_Application::OGL_Application()
 :	m_surface (NULL)
@@ -24,10 +24,10 @@ OGL_Application::OGL_Application()
 ,	m_height(INIT_H)
 ,	m_bpp(SURFACE_BPP)
 ,	m_OGL_Consumer(NULL)
-,	m_curSample(UNEXISTSAMP)
+,	m_curSample(NONEXISTENT_SAMPLE)
 {
 	m_sampleNum[0] = '0';
-	m_sampleNum[1] = '1';
+	m_sampleNum[1] = '7';
 }
 
 OGL_Application::~OGL_Application()
