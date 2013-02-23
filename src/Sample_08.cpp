@@ -1,16 +1,16 @@
 /*
- * Sample_07.cpp
+ * Sample_08.cpp
  *
  *  Created on: Feb 23, 2013
  *      Author: Andrew Zhabura
  */
 
 
-#include "Sample_07.h"
+#include "Sample_08.h"
 
 #include <SDL/SDL.h>
 
-Sample_07::Sample_07()
+Sample_08::Sample_08()
 :	m_xrot(0.0f)
 ,	m_yrot(0.0f)
 ,	m_xspeed(0.1f)
@@ -18,20 +18,21 @@ Sample_07::Sample_07()
 ,	m_z(-5.0f)
 ,	m_filter(0)
 ,	m_light(false)
+,	m_blend(false)
 {
 	for (int i = 0; i < 3; ++i)
 	{
 		m_texture[i] = 0;
 	}
-	m_image.loadBMP( "data/crate.bmp" );
+	m_image.loadBMP( "data/glass.bmp" );
 }
 
-Sample_07::~Sample_07()
+Sample_08::~Sample_08()
 {
 	delete [] m_texture;
 }
 
-void Sample_07::reshape(int width, int height)
+void Sample_08::reshape(int width, int height)
 {
 	// Height / width ration
 	GLfloat ratio;
@@ -52,7 +53,7 @@ void Sample_07::reshape(int width, int height)
 	glLoadIdentity( );
 }
 
-void Sample_07::draw()
+void Sample_08::draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);         // Clear Screen And Depth Buffer
 	glLoadIdentity();                           // Reset The Current Matrix
@@ -106,7 +107,7 @@ void Sample_07::draw()
 	m_yrot+=m_yspeed;                               // Add yspeed To yrot
 }
 
-void Sample_07::initGL()
+void Sample_08::initGL()
 {
 	GLfloat LightAmbient[]= { 0.5f, 0.5f, 0.5f, 1.0f };                 // Ambient Light Values
 	GLfloat LightDiffuse[]= { 1.0f, 1.0f, 1.0f, 1.0f };              // Diffuse Light Values
@@ -149,18 +150,21 @@ void Sample_07::initGL()
 	glLightfv(GL_LIGHT1, GL_POSITION,LightPosition);            // Position The Light
 	glEnable(GL_LIGHT1);                            // Enable Light One
 
+	glColor4f(1.0f, 1.0f, 1.0f, 0.5);					// Full Brightness.  50% Alpha
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE);					// Set The Blending Function For Translucency
+
 	glPushClientAttrib(GL_ALL_CLIENT_ATTRIB_BITS);
 	// set here client attributes (states)
 }
 
-void Sample_07::restoreGL()
+void Sample_08::restoreGL()
 {
 	// restore server and client attributes (states)
 	glPopClientAttrib();
 	glPopAttrib();
 }
 
-bool Sample_07::sendMessage(int message, int mode, int x, int y)
+bool Sample_08::sendMessage(int message, int mode, int x, int y)
 {
 	switch (message) {
 	case SDLK_l:
@@ -186,6 +190,21 @@ bool Sample_07::sendMessage(int message, int mode, int x, int y)
 			printf("Linear Filtered Texture\n");
 		if (m_filter == 2)
 			printf("MipMapped Filtered Texture\n");
+		break;
+	case SDLK_b:
+		m_blend = !m_blend;
+		if(m_blend)
+		{
+			glEnable(GL_BLEND);			// Turn Blending On
+			glDisable(GL_DEPTH_TEST);	// Turn Depth Testing Off
+			printf("Blending is ON\n");
+		}
+		else
+		{
+			glDisable(GL_BLEND);		// Turn Blending Off
+			glEnable(GL_DEPTH_TEST);	// Turn Depth Testing On
+			printf("Blending is OFF\n");
+		}
 		break;
 	case SDLK_PAGEUP:
 		m_z-=0.2f;               // If So, Move Into The Screen

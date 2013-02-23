@@ -1,26 +1,26 @@
 /*
- * Sample_07.h
+ * Sample_08.h
  *
  *  Created on: Feb 23, 2013
  *      Author: Andrew Zhabura
  */
 
-#ifndef Sample_07_H_
-#define Sample_07_H_
+#ifndef Sample_08_H_
+#define Sample_08_H_
 
 #include "Sample.h"
 #include "OGLImageRec.h"
 
-class Sample_07 : public Sample
+class Sample_08 : public Sample
 {
 public:
-	Sample_07();
-	virtual ~Sample_07();
+	Sample_08();
+	virtual ~Sample_08();
 
 	virtual void reshape(int width, int height);
 	virtual char* name() const
 	{
-		return (char*)&"07. Texture Filters, Lighting & Keyboard Control (f,l,PgUP,PgDOWN,arrows)";
+		return (char*)&"08. Blending (b,f,l,PgUP,PgDOWN,arrows)";
 	}
 	virtual int width() const
 	{
@@ -40,6 +40,7 @@ protected:
 
 private:
 	bool	m_light;			// Lighting ON / OFF
+	bool	m_blend;			// Blending ON / OFF
 
 	GLfloat		m_xrot;			// X Rotation
 	GLfloat		m_yrot;			// Y Rotation
@@ -51,4 +52,4 @@ private:
 	OGLImageRec	m_image;
 };
 
-#endif /* Sample_07_H_ */
+#endif /* Sample_08_H_ */
