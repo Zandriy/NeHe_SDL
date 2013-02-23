@@ -197,6 +197,11 @@ void OGL_Application::handleKeyPress( SDL_keysym *keysym )
 	{
 	case SDLK_ESCAPE:
 		// ESC key was pressed
+
+		// If FullScreen , then switch back to Window mode before closing
+		if(m_fullScreen)
+			resizeWindow( m_OGL_Consumer->width(), m_OGL_Consumer->height() );
+
 		m_breakReason = SDL_QUIT;
 		break;
 	case SDLK_F10:
@@ -219,22 +224,6 @@ void OGL_Application::handleKeyPress( SDL_keysym *keysym )
 		// If toggle FullScreen failed, then switch back
 		if(m_surface == NULL)
 			resizeWindow( m_OGL_Consumer->width(), m_OGL_Consumer->height() );
-
-
-
-
-		//static int fullscreen = 0;
-
-		              // fullscreen = !fullscreen;
-		// !!! This part is not finished yet and it doesn't work properly.
-		// F10 key was pressed
-		// this toggles fullm_surface mode
-		//int flags = m_surface->flags; /* Save the current flags in case toggling fails */
-
-		//m_fullscreen = SDL_WM_ToggleFullScreen( m_surface );
-		//m_surface = SDL_SetVideoMode(0, 0, m_bpp, m_surface->flags ^ SDL_FULLSCREEN); /*Toggles FullScreen Mode */
-		//if(m_surface == NULL) m_surface = SDL_SetVideoMode(0, 0, 0, flags); /* If toggle FullScreen failed, then switch back */
-		//if(m_surface == NULL) m_breakReason = SDL_QUIT; /* If you can't switch back for some reason, then epic fail */
 		break;
 	case SDLK_0:
 		num = '0';

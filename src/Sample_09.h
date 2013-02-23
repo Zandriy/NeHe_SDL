@@ -9,7 +9,8 @@
 #define Sample_09_H_
 
 #include "Sample.h"
-#include "OGLImageRec.h"
+
+#include <SDL/SDL.h>
 
 class Sample_09 : public Sample
 {
@@ -57,7 +58,7 @@ private:
 	GLuint	m_loop;				// General Loop Variable
 
 	GLuint		m_texture[1];	// Storage For One Texture
-	OGLImageRec	m_image;
+	SDL_Surface *m_image;
 };
 
 #endif /* Sample_09_H_ */

@@ -8,8 +8,6 @@
 
 #include "Sample_09.h"
 
-#include <SDL/SDL.h>
-
 Sample_09::Sample_09()
 :	m_twinkle(false)
 ,	m_zoom(-15.0f)
@@ -18,7 +16,7 @@ Sample_09::Sample_09()
 ,	m_loop(0.0f)
 {
 	m_texture[0] = 0;
-	m_image.loadBMP( "data/star.bmp" );
+	m_image = SDL_LoadBMP( "data/star.bmp" );
 }
 
 Sample_09::~Sample_09()
@@ -125,7 +123,7 @@ void Sample_09::initGL()
 	glBindTexture(GL_TEXTURE_2D, m_texture[0]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, m_image->w, m_image->h, 0, GL_RGB, GL_UNSIGNED_BYTE, m_image->pixels);
 
 }
 
