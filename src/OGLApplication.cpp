@@ -25,9 +25,10 @@ OGL_Application::OGL_Application()
 ,	m_bpp(SURFACE_BPP)
 ,	m_OGL_Consumer(NULL)
 ,	m_curSample(NONEXISTENT_SAMPLE)
+,	m_fullScreen(false)
 {
 	m_sampleNum[0] = '0';
-	m_sampleNum[1] = '7';
+	m_sampleNum[1] = '9';
 }
 
 OGL_Application::~OGL_Application()
@@ -88,8 +89,7 @@ void OGL_Application::init()
 	SDL_GL_SetAttribute( SDL_GL_ACCUM_ALPHA_SIZE, 8 ); // the minimum number of bits for the alpha channel of the accumulation buffer
 
 	// get a SDL surface
-	m_surface = SDL_SetVideoMode( m_width, m_height, m_bpp,
-			m_videoFlags );
+	m_surface = SDL_SetVideoMode( m_width, m_height, m_bpp, m_videoFlags );
 
 	// Verify there is a surface
 	if ( !m_surface )
@@ -169,6 +169,8 @@ bool OGL_Application::resizeWindow( int width, int height )
 	m_width = width;
 	m_height = height;
 
+	m_fullScreen = false;
+
 	m_surface = SDL_SetVideoMode( m_width, m_height, m_bpp, m_videoFlags );
 	if ( !m_surface )
 	{
@@ -198,13 +200,41 @@ void OGL_Application::handleKeyPress( SDL_keysym *keysym )
 		m_breakReason = SDL_QUIT;
 		break;
 	case SDLK_F10:
+		if ( !m_fullScreen )
+		{
+			m_fullScreen = true;
+			// Toggles FullScreen Mode
+			m_surface = SDL_SetVideoMode(0, 0, 0, m_videoFlags ^ SDL_FULLSCREEN);
+			if(m_surface)
+			{
+				m_width = m_surface->w;
+				m_height = m_surface->h;
+				m_OGL_Consumer->reshape( m_width, m_height );
+				drawGLScene();
+			}
+		}
+		else
+			resizeWindow( m_OGL_Consumer->width(), m_OGL_Consumer->height() );
+
+		// If toggle FullScreen failed, then switch back
+		if(m_surface == NULL)
+			resizeWindow( m_OGL_Consumer->width(), m_OGL_Consumer->height() );
+
+
+
+
+		//static int fullscreen = 0;
+
+		              // fullscreen = !fullscreen;
 		// !!! This part is not finished yet and it doesn't work properly.
 		// F10 key was pressed
 		// this toggles fullm_surface mode
 		//int flags = m_surface->flags; /* Save the current flags in case toggling fails */
-		m_surface = SDL_SetVideoMode(0, 0, m_bpp, m_surface->flags ^ SDL_FULLSCREEN); /*Toggles FullScreen Mode */
+
+		//m_fullscreen = SDL_WM_ToggleFullScreen( m_surface );
+		//m_surface = SDL_SetVideoMode(0, 0, m_bpp, m_surface->flags ^ SDL_FULLSCREEN); /*Toggles FullScreen Mode */
 		//if(m_surface == NULL) m_surface = SDL_SetVideoMode(0, 0, 0, flags); /* If toggle FullScreen failed, then switch back */
-		if(m_surface == NULL) m_breakReason = SDL_QUIT; /* If you can't switch back for some reason, then epic fail */
+		//if(m_surface == NULL) m_breakReason = SDL_QUIT; /* If you can't switch back for some reason, then epic fail */
 		break;
 	case SDLK_0:
 		num = '0';
@@ -272,7 +302,9 @@ void OGL_Application::setSample()
 		{
 			m_curSample = newSample;
 			SDL_WM_SetCaption(m_OGL_Consumer->sampleName(), NULL);
-			resizeWindow( m_OGL_Consumer->width(), m_OGL_Consumer->height() );
+
+			if (!m_fullScreen)
+				resizeWindow( m_OGL_Consumer->width(), m_OGL_Consumer->height() );
 		}
 		else
 		{

@@ -29,6 +29,7 @@ private:
 	OGL_Consumer * m_OGL_Consumer;
 	unsigned int  m_curSample;
 	char m_sampleNum[2];
+	bool m_fullScreen;
 
 	void setSample();
 	bool resizeWindow( int width, int height );

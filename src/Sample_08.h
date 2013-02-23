@@ -47,8 +47,8 @@ private:
 	GLfloat		m_xspeed;		// X Rotation Speed
 	GLfloat		m_yspeed;		// Y Rotation Speed
 	GLfloat		m_z;			// Depth Into The Screen
-	GLuint		m_texture[3];	// Storage For One Texture
-	GLuint		m_filter;			// Which Filter To Use
+	GLuint		m_texture[3];	// Storage For Three Textures
+	GLuint		m_filter;		// Which Filter To Use
 	OGLImageRec	m_image;
 };
 
