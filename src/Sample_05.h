@@ -1,7 +1,7 @@
 /*
  * Sample_05.h
  *
- *  Created on: Feb 21, 2053
+ *  Created on: Feb 21, 2013
  *      Author: Andrew Zhabura
  */
 
@@ -19,7 +19,7 @@ public:
 	virtual void reshape(int width, int height);
 	virtual char* name() const
 	{
-		return (char*)&"05. NeHe's 3D Shapes";
+		return (char*)&"05. 3D Shapes";
 	}
 	virtual int width() const
 	{
@@ -36,8 +36,8 @@ protected:
 	void restoreGL();
 
 private:
-	GLfloat     m_rtri;                       // Angle For The Triangle ( NEW )
-	GLfloat     m_rquad;                      // Angle For The Quad     ( NEW )
+	GLfloat     m_rtri;                       // Angle For The Pyramid
+	GLfloat     m_rquad;                      // Angle For The Cube
 };
 
 #endif /* Sample_05_H_ */

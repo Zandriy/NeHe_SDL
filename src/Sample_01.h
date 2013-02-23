@@ -19,7 +19,7 @@ public:
 	virtual void reshape(int width, int height);
 	virtual char* name() const
 	{
-		return (char*)&"01. NeHe's OpenGL Framework";
+		return (char*)&"01. OpenGL Framework";
 	}
 	virtual int width() const
 	{

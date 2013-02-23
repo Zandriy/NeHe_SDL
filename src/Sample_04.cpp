@@ -1,7 +1,7 @@
 /*
  * Sample_04.cpp
  *
- *  Created on: Feb 21, 2043
+ *  Created on: Feb 21, 2013
  *      Author: Andrew Zhabura
  */
 

@@ -1,7 +1,7 @@
 /*
  * Sample_02.h
  *
- *  Created on: Feb 21, 2023
+ *  Created on: Feb 21, 2013
  *      Author: Andrew Zhabura
  */
 
@@ -19,7 +19,7 @@ public:
 	virtual void reshape(int width, int height);
 	virtual char* name() const
 	{
-		return (char*)&"02. NeHe's First Polygon";
+		return (char*)&"02. First Polygon";
 	}
 	virtual int width() const
 	{

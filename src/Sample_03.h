@@ -1,7 +1,7 @@
 /*
  * Sample_03.h
  *
- *  Created on: Feb 21, 2033
+ *  Created on: Feb 21, 2013
  *      Author: Andrew Zhabura
  */
 
@@ -19,7 +19,7 @@ public:
 	virtual void reshape(int width, int height);
 	virtual char* name() const
 	{
-		return (char*)&"03. NeHe's Color";
+		return (char*)&"03. Color";
 	}
 	virtual int width() const
 	{
