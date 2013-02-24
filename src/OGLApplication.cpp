@@ -27,8 +27,8 @@ OGL_Application::OGL_Application()
 ,	m_curSample(NONEXISTENT_SAMPLE)
 ,	m_fullScreen(false)
 {
-	m_sampleNum[0] = '0';
-	m_sampleNum[1] = '9';
+	m_sampleNum[0] = '1';
+	m_sampleNum[1] = '0';
 }
 
 OGL_Application::~OGL_Application()
@@ -98,6 +98,9 @@ void OGL_Application::init()
 		m_breakReason = -1;
 		return;
 	}
+
+	// Allow to repeat key pressing events
+	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
 	m_OGL_Consumer = new OGL_Consumer;
 	setSample();

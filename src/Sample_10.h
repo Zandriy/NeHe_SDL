@@ -51,7 +51,7 @@ public:
 	virtual void reshape(int width, int height);
 	virtual char* name() const
 	{
-		return (char*)&"10. Loading And Moving Through A 3D World";
+		return (char*)&"10. Loading And Moving Through A 3D World (b,f,s,PgUP,PgDOWN,arrows)";
 	}
 	virtual int width() const
 	{

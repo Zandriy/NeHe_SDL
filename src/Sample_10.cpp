@@ -31,6 +31,8 @@ Sample_10::Sample_10()
 	}
 	m_imageSDL = SDL_LoadBMP( "data/mud.bmp" );
 	m_image.loadBMP( "data/mud.bmp" );
+
+	setupWorld();
 }
 
 Sample_10::~Sample_10()
@@ -128,10 +130,7 @@ void Sample_10::initGL()
 
 
 	if (m_texture[NEAREST_FILTER] == 0)
-	{
 		glGenTextures(TEX_QTY, &m_texture[NEAREST_FILTER]);                  // Create The Textures
-		setupWorld();
-	}
 
 	// Create Nearest Filtered Texture
 	glBindTexture(GL_TEXTURE_2D, m_texture[NEAREST_FILTER]);
@@ -156,9 +155,9 @@ void Sample_10::initGL()
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
 	if (m_useSDLImage)
-		glTexImage2D(GL_TEXTURE_2D, 0, 3, m_imageSDL->w, m_imageSDL->h, 0, GL_RGB, GL_UNSIGNED_BYTE, m_imageSDL->pixels);
+		gluBuild2DMipmaps(GL_TEXTURE_2D, 3, m_imageSDL->w, m_imageSDL->h, GL_RGB, GL_UNSIGNED_BYTE, m_imageSDL->pixels);
 	else
-		glTexImage2D(GL_TEXTURE_2D, 0, 3, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+		gluBuild2DMipmaps(GL_TEXTURE_2D, 3, m_image.sizeY(), m_image.sizeY(), GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
 
 }
 
