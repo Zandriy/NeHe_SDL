@@ -13,7 +13,7 @@ Sample_06::Sample_06()
 ,	m_yrot(0.0f)
 ,	m_zrot(0.0f)
 {
-	m_texture[0] = 0;
+	m_texture[TEX_1] = 0;
 	m_image.loadBMP( "data/nehe.bmp" );
 }
 
@@ -53,7 +53,7 @@ void Sample_06::draw()
 	glRotatef(m_yrot,0.0f,1.0f,0.0f);                     // Rotate On The Y Axis
 	glRotatef(m_zrot,0.0f,0.0f,1.0f);                     // Rotate On The Z Axis
 
-	glBindTexture(GL_TEXTURE_2D, m_texture[0]);               // Select Our Texture
+	glBindTexture(GL_TEXTURE_2D, m_texture[TEX_1]);               // Select Our Texture
 
 	glBegin(GL_QUADS);
 	// Front Face
@@ -105,11 +105,11 @@ void Sample_06::initGL()
 	glDepthFunc(GL_LEQUAL);                         // The Type Of Depth Testing To Do
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);          // Really Nice Perspective
 
-	if (m_texture[0] == 0)
-		glGenTextures(1, &m_texture[0]);                  // Create The Texture
+	if (m_texture[TEX_1] == 0)
+		glGenTextures(TEX_QTY, &m_texture[TEX_1]);                  // Create The Texture
 
 	// Typical Texture Generation Using Data From The Bitmap
-	glBindTexture(GL_TEXTURE_2D, m_texture[0]);
+	glBindTexture(GL_TEXTURE_2D, m_texture[TEX_1]);
 	// Generate The Texture
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // Linear Filtering

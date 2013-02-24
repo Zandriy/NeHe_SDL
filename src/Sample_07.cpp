@@ -19,7 +19,7 @@ Sample_07::Sample_07()
 ,	m_filter(0)
 ,	m_light(false)
 {
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < TEX_QTY; ++i)
 	{
 		m_texture[i] = 0;
 	}
@@ -114,23 +114,23 @@ void Sample_07::initGL()
 
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 
-	if (m_texture[0] == 0)
-		glGenTextures(3, &m_texture[0]);                  // Create The Texture
+	if (m_texture[NEAREST_FILTER] == 0)
+		glGenTextures(TEX_QTY, &m_texture[NEAREST_FILTER]);                  // Create The Texture
 
 	// Create Nearest Filtered Texture
-	glBindTexture(GL_TEXTURE_2D, m_texture[0]);
+	glBindTexture(GL_TEXTURE_2D, m_texture[NEAREST_FILTER]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
 
 	// Create Linear Filtered Texture
-	glBindTexture(GL_TEXTURE_2D, m_texture[1]);
+	glBindTexture(GL_TEXTURE_2D, m_texture[LINEAR_FILTER]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
 
 	// Create MipMapped Texture
-	glBindTexture(GL_TEXTURE_2D, m_texture[2]);
+	glBindTexture(GL_TEXTURE_2D, m_texture[MIPMAPPED_FILTER]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
 	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, m_image.sizeY(), m_image.sizeY(), GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
@@ -178,13 +178,13 @@ bool Sample_07::sendMessage(int message, int mode, int x, int y)
 		break;
 	case SDLK_f:
 		m_filter+=1;              // filter Value Increases By One
-		if (m_filter>2)                // Is Value Greater Than 2?
-			m_filter=0;           // If So, Set filter To 0
-		if (m_filter == 0)
+		if (m_filter>=TEX_QTY)                // Is Value Greater Than 2?
+			m_filter=NEAREST_FILTER;           // If So, Set filter To 0
+		if (m_filter == NEAREST_FILTER)
 			printf("Nearest Filtered Texture\n");
-		if (m_filter == 1)
+		if (m_filter == LINEAR_FILTER)
 			printf("Linear Filtered Texture\n");
-		if (m_filter == 2)
+		if (m_filter == MIPMAPPED_FILTER)
 			printf("MipMapped Filtered Texture\n");
 		break;
 	case SDLK_PAGEUP:

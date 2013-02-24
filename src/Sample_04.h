@@ -12,6 +12,10 @@
 
 class Sample_04 : public Sample
 {
+	enum classConsts {
+		INIT_W = 640,
+		INIT_H = 480
+	};
 public:
 	Sample_04();
 	virtual ~Sample_04();
@@ -23,11 +27,11 @@ public:
 	}
 	virtual int width() const
 	{
-		return 640;
+		return INIT_W;
 	}
 	virtual int height() const
 	{
-		return 480;
+		return INIT_H;
 	}
 
 protected:
@@ -36,8 +40,8 @@ protected:
 	void restoreGL();
 
 private:
-	GLfloat     m_rtri;                       // Angle For The Triangle ( NEW )
-	GLfloat     m_rquad;                      // Angle For The Quad     ( NEW )
+	GLfloat     m_rtri;                       // Angle For The Triangle
+	GLfloat     m_rquad;                      // Angle For The Quad
 };
 
 #endif /* Sample_04_H_ */

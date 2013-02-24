@@ -12,6 +12,10 @@
 
 class Sample_01 : public Sample
 {
+	enum classConsts {
+		INIT_W = 400,
+		INIT_H = 300
+	};
 public:
 	Sample_01();
 	virtual ~Sample_01();
@@ -23,11 +27,11 @@ public:
 	}
 	virtual int width() const
 	{
-		return 400;
+		return INIT_W;
 	}
 	virtual int height() const
 	{
-		return 300;
+		return INIT_H;
 	}
 
 protected:

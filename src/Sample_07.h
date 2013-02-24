@@ -13,6 +13,10 @@
 
 class Sample_07 : public Sample
 {
+	enum classConsts {
+		INIT_W = 640,
+		INIT_H = 480
+	};
 public:
 	Sample_07();
 	virtual ~Sample_07();
@@ -24,11 +28,11 @@ public:
 	}
 	virtual int width() const
 	{
-		return 640;
+		return INIT_W;
 	}
 	virtual int height() const
 	{
-		return 480;
+		return INIT_H;
 	}
 
 	virtual bool sendMessage(int message, int mode, int x, int y);
@@ -39,6 +43,13 @@ protected:
 	void restoreGL();
 
 private:
+	enum texFilters {
+		NEAREST_FILTER,
+		LINEAR_FILTER,
+		MIPMAPPED_FILTER,
+		TEX_QTY
+	};
+
 	bool	m_light;			// Lighting ON / OFF
 
 	GLfloat		m_xrot;			// X Rotation
@@ -46,7 +57,7 @@ private:
 	GLfloat		m_xspeed;		// X Rotation Speed
 	GLfloat		m_yspeed;		// Y Rotation Speed
 	GLfloat		m_z;			// Depth Into The Screen
-	GLuint		m_texture[3];	// Storage For One Texture
+	GLuint		m_texture[TEX_QTY];	// Storage For One Texture
 	GLuint		m_filter;			// Which Filter To Use
 	OGLImageRec	m_image;
 };

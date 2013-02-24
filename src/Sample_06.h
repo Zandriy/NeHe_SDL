@@ -13,6 +13,10 @@
 
 class Sample_06 : public Sample
 {
+	enum classConsts {
+		INIT_W = 640,
+		INIT_H = 480
+	};
 public:
 	Sample_06();
 	virtual ~Sample_06();
@@ -24,11 +28,11 @@ public:
 	}
 	virtual int width() const
 	{
-		return 640;
+		return INIT_W;
 	}
 	virtual int height() const
 	{
-		return 480;
+		return INIT_H;
 	}
 
 protected:
@@ -37,10 +41,15 @@ protected:
 	void restoreGL();
 
 private:
+	enum texFilters {
+		TEX_1,
+		TEX_QTY
+	};
+
 	GLfloat		m_xrot;			// X Rotation
 	GLfloat		m_yrot;			// Y Rotation
 	GLfloat		m_zrot;			// Z Rotation
-	GLuint		m_texture[1];	// Storage For One Texture
+	GLuint		m_texture[TEX_QTY];	// Storage For One Texture
 	OGLImageRec	m_image;
 };
 
