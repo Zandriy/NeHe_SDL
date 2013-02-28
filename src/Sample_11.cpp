@@ -23,10 +23,10 @@ Sample_11::Sample_11()
 	m_image.loadBMP( "data/tim.bmp" );
 
 	// Loop Through The X Plane
-	for(int x=0; x<45; x++)
+	for(int x=0; x<GRID_SIZE; x++)
 	{
 		// Loop Through The Y Plane
-		for(int y=0; y<45; y++)
+		for(int y=0; y<GRID_SIZE; y++)
 		{
 			// Apply The Wave To Our Mesh
 			m_points[x][y][0]=float((x/5.0f)-4.5f);
@@ -78,14 +78,14 @@ void Sample_11::draw()
 	glBindTexture(GL_TEXTURE_2D, m_texture[TEX_1]);               // Select Our Texture
 
 	glBegin(GL_QUADS);                  // Start Drawing Our Quads
-	for( x = 0; x < 44; x++ )                // Loop Through The X Plane (44 Points)
+	for( x = 0; x < GRID_SIZE-1; x++ )                // Loop Through The X Plane (GRID_SIZE Points)
 	{
-		for( y = 0; y < 44; y++ )            // Loop Through The Y Plane (44 Points)
+		for( y = 0; y < GRID_SIZE-1; y++ )            // Loop Through The Y Plane (GRID_SIZE Points)
 		{
-			float_x = float(x)/44.0f;       // Create A Floating Point X Value
-			float_y = float(y)/44.0f;       // Create A Floating Point Y Value
-			float_xb = float(x+1)/44.0f;        // Create A Floating Point Y Value+0.0227f
-			float_yb = float(y+1)/44.0f;        // Create A Floating Point Y Value+0.0227f
+			float_x = float(x)/(GRID_SIZE-1);       // Create A Floating Point X Value
+			float_y = float(y)/(GRID_SIZE-1);       // Create A Floating Point Y Value
+			float_xb = float(x+1)/(GRID_SIZE-1);        // Create A Floating Point Y Value+0.0227f
+			float_yb = float(y+1)/(GRID_SIZE-1);        // Create A Floating Point Y Value+0.0227f
 
 			glTexCoord2f( float_x, float_y);    // First Texture Coordinate (Bottom Left)
 			glVertex3f( m_points[x][y][0], m_points[x][y][1], m_points[x][y][2] );
@@ -104,15 +104,15 @@ void Sample_11::draw()
 
 	if( m_wiggle_count == 2 )                 // Used To Slow Down The Wave (Every 2nd Frame Only)
 	{
-		for( y = 0; y < 45; y++ )            // Loop Through The Y Plane
+		for( y = 0; y < GRID_SIZE; y++ )            // Loop Through The Y Plane
 		{
 			m_hold=m_points[0][y][2];           // Store Current Value One Left Side Of Wave
-			for( x = 0; x < 44; x++)     // Loop Through The X Plane
+			for( x = 0; x < GRID_SIZE-1; x++)     // Loop Through The X Plane
 			{
 				// Current Wave Value Equals Value To The Right
 				m_points[x][y][2] = m_points[x+1][y][2];
 			}
-			m_points[44][y][2]=m_hold;          // Last Value Becomes The Far Left Stored Value
+			m_points[GRID_SIZE-1][y][2]=m_hold;          // Last Value Becomes The Far Left Stored Value
 		}
 		m_wiggle_count = 0;               // Set Counter Back To Zero
 	}
