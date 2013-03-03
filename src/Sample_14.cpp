@@ -1,11 +1,11 @@
 /*
- * Sample_13.cpp
+ * Sample_14.cpp
  *
  *  Created on: Mar 3, 2013
  *      Author: Andrew Zhabura
  */
 
-#include "Sample_13.h"
+#include "Sample_14.h"
 
 #include <cstdio>
 #include <cstring>
@@ -13,10 +13,11 @@
 #include <cstdarg>
 #include <cmath>
 
-Sample_13::Sample_13()
+Sample_14::Sample_14()
 :	m_base(0)
 ,	m_cnt1(0.0f)
 ,	m_cnt2(0.0f)
+,   m_rot(0.0f)
 {
 	/* Storage for 96 characters */
 	m_base = glGenLists( LIST_SZ );
@@ -24,12 +25,12 @@ Sample_13::Sample_13()
 	buildFont();
 }
 
-Sample_13::~Sample_13()
+Sample_14::~Sample_14()
 {
 	glDeleteLists( m_base, LIST_SZ );
 }
 
-void Sample_13::reshape(int w, int h)
+void Sample_14::reshape(int w, int h)
 {
     /* w / width ration */
     GLfloat ratio;
@@ -57,7 +58,7 @@ void Sample_13::reshape(int w, int h)
     glLoadIdentity( );
 }
 
-void Sample_13::draw()
+void Sample_14::draw()
 {
 	/* Clear The Screen And The Depth Buffer */
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -82,7 +83,7 @@ void Sample_13::draw()
 	m_cnt2 += 0.005f; /* Increase the second counter */
 }
 
-void Sample_13::initGL()
+void Sample_14::initGL()
 {
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	// set here server attributes (states)
@@ -109,7 +110,7 @@ void Sample_13::initGL()
 	// set here client attributes (states)
 }
 
-void Sample_13::restoreGL()
+void Sample_14::restoreGL()
 {
 	// restore server and client attributes (states)
 	glPopClientAttrib();
@@ -117,7 +118,7 @@ void Sample_13::restoreGL()
 }
 
 /* function to build our font list */
-void Sample_13::buildFont()
+void Sample_14::buildFont()
 {
 	Display *dpy;          /* Our current X display */
 	XFontStruct *fontInfo; /* Our font info */
@@ -149,7 +150,7 @@ void Sample_13::buildFont()
 	XCloseDisplay( dpy );
 }
 
-void Sample_13::glPrint( const char *fmt, ... )
+void Sample_14::glPrint( const char *fmt, ... )
 {
 	char text[256]; /* Holds our string */
 	va_list ap;     /* Pointer to our list of elements */
