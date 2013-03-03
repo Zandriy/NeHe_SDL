@@ -15,6 +15,7 @@
 #else
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <GL/glx.h>
 #endif
 
 #ifndef	GL_ALL_CLIENT_ATTRIB_BITS
