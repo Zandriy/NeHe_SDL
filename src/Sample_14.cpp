@@ -120,6 +120,8 @@ void Sample_14::restoreGL()
 /* function to build our font list */
 void Sample_14::buildFont()
 {
+#ifdef __APPLE__
+#else // __APPLE__
 	Display *dpy;          /* Our current X display */
 	XFontStruct *fontInfo; /* Our font info */
 
@@ -148,6 +150,7 @@ void Sample_14::buildFont()
 
 	/* close the display now that we're done with it */
 	XCloseDisplay( dpy );
+#endif // __APPLE__
 }
 
 void Sample_14::glPrint( const char *fmt, ... )
@@ -177,3 +180,4 @@ void Sample_14::glPrint( const char *fmt, ... )
 	/* Pops the Display List Bits */
 	glPopAttrib( );
 }
+
