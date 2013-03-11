@@ -31,7 +31,7 @@ Sample_19::Sample_19()
 	{
 		m_texture[i] = 0;
 	}
-	m_image.loadBMP( "data/wall.bmp" );
+	m_image.loadBMP( "data/particle.bmp" );
 
 	for (;m_loop<MAX_PARTICLES;m_loop++)                   // Initialize All The Textures
 	{
@@ -121,6 +121,14 @@ void Sample_19::draw()
     		}
     	}
     }
+
+    if (m_rainbow && (m_delay>25))   // Rainbow Mode
+    {
+		m_delay=0;            // Reset The Rainbow Color Cycling Delay
+		m_col++;              // Change The Particle Color
+		if (m_col>11) m_col=0;       // If Color Is To High Reset It
+    }
+    m_delay++;
 }
 
 void Sample_19::initGL()
@@ -160,16 +168,28 @@ bool Sample_19::sendMessage(int message, int mode, int x, int y)
 {
 	switch (message) {
 	case SDLK_UP:
-		if (m_particle[m_loop].yg<1.5f) m_particle[m_loop].yg+=0.01f;
+		if (m_particle[m_loop].yg<1.5f)
+			m_particle[m_loop].yg+=0.01f;
+		if (m_yspeed<200)
+			m_yspeed+=1.0f;
+		else
+			m_yspeed-=1.0f;
 		break;
 	case SDLK_DOWN:
-		if (m_particle[m_loop].yg>-1.5f) m_particle[m_loop].yg-=0.01f;
+		if (m_particle[m_loop].yg>-1.5f)
+			m_particle[m_loop].yg-=0.01f;
+		if (m_xspeed<200)
+			m_xspeed+=1.0f;
+		else
+			m_xspeed-=1.0f;
 		break;
 	case SDLK_RIGHT:
-		if (m_particle[m_loop].xg<1.5f) m_particle[m_loop].xg+=0.01f;
+		if (m_particle[m_loop].xg<1.5f)
+			m_particle[m_loop].xg+=0.01f;
 		break;
 	case SDLK_LEFT:
-		if (m_particle[m_loop].xg>-1.5f) m_particle[m_loop].xg-=0.01f;
+		if (m_particle[m_loop].xg>-1.5f)
+			m_particle[m_loop].xg-=0.01f;
 		break;
 	case SDLK_TAB:
 		m_particle[m_loop].x=0.0f;                  // Center On X Axis
@@ -196,6 +216,9 @@ bool Sample_19::sendMessage(int message, int mode, int x, int y)
 		break;
 	case SDLK_SPACE:
 		m_rainbow=false;   // If Spacebar Is Pressed Disable Rainbow Mode
+		m_delay=0;            // Reset The Rainbow Color Cycling Delay
+		m_col++;              // Change The Particle Color
+		if (m_col>11) m_col=0;       // If Color Is To High Reset It
 		break;
 	default:
 		return false;
