@@ -53,7 +53,7 @@ public:
 	virtual void reshape(int width, int height);
 	virtual char* name() const
 	{
-		return (char*)&"19. Particle Engine Using Triangle Strips";
+		return (char*)&"19. Particle Engine Using Triangle Strips ( arrows,PageUp,PageDown,Tab,+,-,Return,Space )";
 	}
 	virtual int width() const
 	{
