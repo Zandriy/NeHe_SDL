@@ -27,8 +27,8 @@ OGL_Application::OGL_Application()
 ,	m_curSample(NONEXISTENT_SAMPLE)
 ,	m_fullScreen(false)
 {
-	m_sampleNum[0] = '1';
-	m_sampleNum[1] = '0';
+	m_sampleNum[0] = '2';
+	m_sampleNum[1] = '1';
 }
 
 OGL_Application::~OGL_Application()
