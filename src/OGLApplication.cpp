@@ -155,6 +155,8 @@ int OGL_Application::exec()
 				m_breakReason = SDL_QUIT;
 				break;
 			default:
+				if ( m_isActive )
+					m_OGL_Consumer->sendMessage(m_curSample, 0, 0, 0, 0);
 				break;
 			}
 		}

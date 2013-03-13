@@ -8,7 +8,15 @@
 #ifndef Sample_21_H_
 #define Sample_21_H_
 
+// Comment this out if you don't want sound.
+//#define SOUND
+
 #include "Sample.h"
+#include "OGLImageRec.h"
+
+#ifdef SOUND
+#include "SDL_mixer.h"
+#endif
 
 class Sample_21 : public Sample
 {
@@ -16,9 +24,11 @@ class Sample_21 : public Sample
 		INIT_W = 800,
 		INIT_H = 600,
 		LIN_QTY = 11,
-		COL_QTY = 10,
+		GAP_QTY = 10,
 		ENEMIES = 9,
-		STEPS = 6
+		STEPS = 6,
+		SYM_QTY = 256,
+		FIRST_SYM = 32
 	};
 
 	enum textures {
@@ -29,9 +39,9 @@ class Sample_21 : public Sample
 
 	struct      object                              // Create A Structure For Our Player
 	{
-	    int fx, fy;                             // Fine Movement Position
-	    int x, y;                               // Current Player Position
-	    float   spin;                               // Spin Direction
+		int fx, fy;                             // Fine Movement Position
+		int x, y;                               // Current Player Position
+		float   spin;                               // Spin Direction
 	};
 
 
@@ -53,14 +63,16 @@ public:
 		return INIT_H;
 	}
 
+	virtual bool sendMessage(int message, int mode, int x, int y);
+
 protected:
 	void draw();
 	void initGL();
 	void restoreGL();
 
 private:
-	bool m_vline[LIN_QTY][COL_QTY];		// Keeps Track Of Vertical Lines
-	bool m_hline[COL_QTY][LIN_QTY];		// Keeps Track Of Horizontal Lines
+	bool m_vline[LIN_QTY][GAP_QTY];		// Keeps Track Of Vertical Lines
+	bool m_hline[GAP_QTY][LIN_QTY];		// Keeps Track Of Horizontal Lines
 	bool m_filled;						// Done Filling In The Grid?
 	bool m_gameover;					// Is The Game Over?
 	bool m_anti;						// Antialiasing?
@@ -72,14 +84,28 @@ private:
 	int m_level2;                 		// Displayed Game Level
 	int m_stage;             			// Game Stage
 
-	struct  object  player;                             // Player Information
-	struct  object  enemy[ENEMIES];                   // Enemy Information
-	struct  object  hourglass;                          // Hourglass Information
+	struct  object  m_player;                             // Player Information
+	struct  object  m_enemy[ENEMIES];                   // Enemy Information
+	struct  object  m_hourglass;                          // Hourglass Information
 
 	static	int	s_steps[STEPS];                // Stepping Values For Slow Video Adjustment
 
 	GLuint	m_texture[TEX_QTY];                         // Font Texture Storage Space
 	GLuint	m_base;                               // Base Display List For The Font
+
+#ifdef SOUND
+	// audio chunk
+	Mix_Chunk *chunk;
+	Mix_Music *music;
+#endif
+
+	OGLImageRec	m_imageFont;
+	OGLImageRec	m_imagePict;
+
+	void ResetObjects();
+
+	void buildFont();
+	void glPrint( GLint x, GLint y, int set, const char *fmt, ... );
 };
 
 #endif /* Sample_21_H_ */

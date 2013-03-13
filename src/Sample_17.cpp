@@ -21,7 +21,7 @@ Sample_17::Sample_17()
 	m_imageFont.loadBMP( "data/font.bmp" );
 	m_imagePict.loadBMP( "data/bumps.bmp" );
 
-	glGenTextures(TEX_QTY, &m_texture[0]);                  // Create Two Texture
+	glGenTextures(TEX_QTY, &m_texture[TEX_1]);                  // Create Two Texture
 
 	/* Storage for 96 characters */
 	m_base = glGenLists( LIST_SZ );
