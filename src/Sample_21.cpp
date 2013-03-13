@@ -424,13 +424,13 @@ bool Sample_21::sendMessage(int message, int mode, int x, int y)
 				}
 
 				ResetObjects();         // Reset Player / Enemy Positions
-				//PlaySound("Data/Die.wav", NULL, SND_SYNC);  // Play The Death Sound
+				playSound("data/die.wav", 0);  // Play The Death Sound
 			}
 		}
 
 		if (m_filled)                     // Is The Grid Filled In?
 		{
-		    //PlaySound("Data/Complete.wav", NULL, SND_SYNC); // If So, Play The Level Complete Sound
+		    playSound("data/complete.wav", 0); // If So, Play The Level Complete Sound
 			m_stage++;                    // Increase The Stage
 		    if (m_stage>3)                 // Is The Stage Higher Than 3?
 		    {
@@ -469,7 +469,7 @@ bool Sample_21::sendMessage(int message, int mode, int x, int y)
 		if ((m_player.fx==m_hourglass.x*60) && (m_player.fy==m_hourglass.y*40) && (m_hourglass.fx==1))
 		{
 		    // Play Freeze Enemy Sound
-		    //PlaySound("Data/freeze.wav", NULL, SND_ASYNC | SND_LOOP);
+		    playSound("data/freeze.wav", -1);
 			m_hourglass.fx=2;                 // Set The hourglass fx Variable To Two
 			m_hourglass.fy=0;                 // Set The hourglass fy Variable To Zero
 		}
@@ -489,7 +489,7 @@ bool Sample_21::sendMessage(int message, int mode, int x, int y)
 		m_hourglass.fy+=s_steps[m_adjust];                // Increase The hourglass fy Variable
 		if ((m_hourglass.fx==0) && (m_hourglass.fy>6000/m_level))  // Is The hourglass fx Variable Equal To 0 And The fy
 		{                           // Variable Greater Than 6000 Divided By The Current Level?
-		    //PlaySound("Data/hourglass.wav", NULL, SND_ASYNC);   // If So, Play The Hourglass Appears Sound
+		    playSound("data/hourglass.wav", 0);   // If So, Play The Hourglass Appears Sound
 			m_hourglass.x=rand()%10+1;            // Give The Hourglass A Random X Value
 			m_hourglass.y=rand()%11;              // Give The Hourglass A Random Y Value
 			m_hourglass.fx=1;                 // Set hourglass fx Variable To One (Hourglass Stage)
@@ -504,7 +504,7 @@ bool Sample_21::sendMessage(int message, int mode, int x, int y)
 
 		if ((m_hourglass.fx==2) && (m_hourglass.fy>500+(500*m_level)))// Is The hourglass fx Variable Equal To 2 And The fy
 		{                           // Variable Greater Than 500 Plus 500 Times The Current Level?
-		    //PlaySound(NULL, NULL, 0);           // If So, Kill The Freeze Sound
+		    playSound(NULL, 0);           // If So, Kill The Freeze Sound
 			m_hourglass.fx=0;                 // Set hourglass fx Variable To Zero
 			m_hourglass.fy=0;                 // Set hourglass fy Variable To Zero
 		}
@@ -590,4 +590,36 @@ void Sample_21::glPrint(GLint x, GLint y, int set, const char *fmt, ...)        
 
 	glCallLists(strlen(text),GL_UNSIGNED_BYTE, text);           // Write The Text To The Screen
 	glDisable(GL_TEXTURE_2D);                       // Disable Texture Mapping
+}
+
+void Sample_21::playSound( char *sound, int repeat )
+{
+#ifdef SOUND
+
+    if ( sound == NULL )
+	{
+	    Mix_HaltChannel( 1 );
+	    Mix_FreeChunk( chunk );
+	    chunk = NULL;
+
+	    return;
+	}
+
+    if ( chunk )
+	{
+	    Mix_HaltChannel( 1 );
+	    Mix_FreeChunk( chunk );
+
+	    chunk = NULL;
+	}
+
+    chunk = Mix_LoadWAV( sound );
+
+    if ( chunk == NULL )
+	fprintf( stderr, "Failed to load sound: %s\n", sound );
+
+    Mix_PlayChannel( -1, chunk, repeat );
+#endif
+
+    return;
 }

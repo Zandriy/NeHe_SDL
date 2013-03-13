@@ -106,6 +106,7 @@ private:
 
 	void buildFont();
 	void glPrint( GLint x, GLint y, int set, const char *fmt, ... );
+	void playSound( char *sound, int repeat );
 };
 
 #endif /* Sample_21_H_ */
