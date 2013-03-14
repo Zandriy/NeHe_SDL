@@ -48,9 +48,9 @@ public:
 	virtual bool sendMessage(int message, int mode, int x, int y);
 
 protected:
-	void draw();
-	void initGL();
-	void restoreGL();
+	virtual void draw();
+	virtual void initGL();
+	virtual void restoreGL();
 
 private:
 	bool    m_masking;                               // Masking On/Off

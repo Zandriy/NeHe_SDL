@@ -17,6 +17,13 @@ class Sample_08 : public Sample
 		INIT_W = 640,
 		INIT_H = 480
 	};
+
+	enum {
+		NEAREST_FILTER,
+		LINEAR_FILTER,
+		MIPMAPPED_FILTER,
+		TEX_QTY
+	};
 public:
 	Sample_08();
 	virtual ~Sample_08();
@@ -38,17 +45,11 @@ public:
 	virtual bool sendMessage(int message, int mode, int x, int y);
 
 protected:
-	void draw();
-	void initGL();
-	void restoreGL();
+	virtual void draw();
+	virtual void initGL();
+	virtual void restoreGL();
 
 private:
-	enum {
-		NEAREST_FILTER,
-		LINEAR_FILTER,
-		MIPMAPPED_FILTER,
-		TEX_QTY
-	};
 
 	bool	m_light;			// Lighting ON / OFF
 	bool	m_blend;			// Blending ON / OFF

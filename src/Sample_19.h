@@ -67,9 +67,9 @@ public:
 	virtual bool sendMessage(int message, int mode, int x, int y);
 
 protected:
-	void draw();
-	void initGL();
-	void restoreGL();
+	virtual void draw();
+	virtual void initGL();
+	virtual void restoreGL();
 
 private:
 
@@ -84,7 +84,6 @@ private:
 	particles m_particle[MAX_PARTICLES];          // Particle Array (Room For Particle Info)
 	static GLfloat	s_colors[COL_QTY][COL_RGB];				// Rainbow Of Colors
 	OGLImageRec	m_image;
-	int		m_loop;
 };
 
 #endif /* Sample_19_H_ */

@@ -44,9 +44,9 @@ public:
 	}
 
 protected:
-	void draw();
-	void initGL();
-	void restoreGL();
+	virtual void draw();
+	virtual void initGL();
+	virtual void restoreGL();
 
 private:
 	GLuint  m_base; // Base Display List For The Font Set

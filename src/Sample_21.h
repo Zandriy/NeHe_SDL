@@ -64,11 +64,12 @@ public:
 	}
 
 	virtual bool sendMessage(int message, int mode, int x, int y);
+	virtual void sendIdleMessage();
 
 protected:
-	void draw();
-	void initGL();
-	void restoreGL();
+	virtual void draw();
+	virtual void initGL();
+	virtual void restoreGL();
 
 private:
 	bool m_vline[LIN_QTY][GAP_QTY];		// Keeps Track Of Vertical Lines

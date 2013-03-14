@@ -173,6 +173,5 @@ bool Sample_09::sendMessage(int message, int mode, int x, int y)
 		break;
 	}
 
-	drawGLScene();
 	return true;
 }

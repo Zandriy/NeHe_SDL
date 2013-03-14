@@ -25,7 +25,6 @@ Sample_19::Sample_19()
 ,	m_zoom(-40.0f)
 ,	m_col(0)
 ,	m_delay(0)
-,	m_loop(0)
 {
 	for (int i = 0; i < TEX_QTY; ++i)
 	{
@@ -33,20 +32,20 @@ Sample_19::Sample_19()
 	}
 	m_image.loadBMP( "data/particle.bmp" );
 
-	for (;m_loop<MAX_PARTICLES;m_loop++)                   // Initialize All The Textures
+	for (int loop = 0;loop<MAX_PARTICLES;loop++)                   // Initialize All The Textures
 	{
-	    m_particle[m_loop].active=true;                 // Make All The Particles Active
-	    m_particle[m_loop].life=1.0f;                   // Give All The Particles Full Life
-	    m_particle[m_loop].fade=float(rand()%100)/1000.0f+0.003f;       // Random Fade Speed
-	    m_particle[m_loop].r=s_colors[m_loop*(12/MAX_PARTICLES)][0];        // Select Red Rainbow Color
-	    m_particle[m_loop].g=s_colors[m_loop*(12/MAX_PARTICLES)][1];        // Select Red Rainbow Color
-	    m_particle[m_loop].b=s_colors[m_loop*(12/MAX_PARTICLES)][2];        // Select Red Rainbow Color
-	    m_particle[m_loop].xi=float((rand()%50)-26.0f)*10.0f;       // Random Speed On X Axis
-	    m_particle[m_loop].yi=float((rand()%50)-25.0f)*10.0f;       // Random Speed On Y Axis
-	    m_particle[m_loop].zi=float((rand()%50)-25.0f)*10.0f;       // Random Speed On Z Axis
-        m_particle[m_loop].xg=0.0f;                     // Set Horizontal Pull To Zero
-        m_particle[m_loop].yg=-0.8f;                    // Set Vertical Pull Downward
-        m_particle[m_loop].zg=0.0f;                     // Set Pull On Z Axis To Zero
+	    m_particle[loop].active=true;                 // Make All The Particles Active
+	    m_particle[loop].life=1.0f;                   // Give All The Particles Full Life
+	    m_particle[loop].fade=float(rand()%100)/1000.0f+0.003f;       // Random Fade Speed
+	    m_particle[loop].r=s_colors[loop*(12/MAX_PARTICLES)][0];        // Select Red Rainbow Color
+	    m_particle[loop].g=s_colors[loop*(12/MAX_PARTICLES)][1];        // Select Red Rainbow Color
+	    m_particle[loop].b=s_colors[loop*(12/MAX_PARTICLES)][2];        // Select Red Rainbow Color
+	    m_particle[loop].xi=float((rand()%50)-26.0f)*10.0f;       // Random Speed On X Axis
+	    m_particle[loop].yi=float((rand()%50)-25.0f)*10.0f;       // Random Speed On Y Axis
+	    m_particle[loop].zi=float((rand()%50)-25.0f)*10.0f;       // Random Speed On Z Axis
+        m_particle[loop].xg=0.0f;                     // Set Horizontal Pull To Zero
+        m_particle[loop].yg=-0.8f;                    // Set Vertical Pull Downward
+        m_particle[loop].zg=0.0f;                     // Set Pull On Z Axis To Zero
     }                                // Initialization Went OK
 }
 
@@ -79,16 +78,16 @@ void Sample_19::draw()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);         // Clear Screen And Depth Buffer
     glLoadIdentity();                           // Reset The ModelView Matrix
 
-    for (m_loop=0;m_loop<MAX_PARTICLES;m_loop++)                   // Loop Through All The Particles
+    for (int loop=0;loop<MAX_PARTICLES;++loop)                   // Loop Through All The Particles
     {
-    	if (m_particle[m_loop].active)                  // If The Particle Is Active
+    	if (m_particle[loop].active)                  // If The Particle Is Active
     	{
-    		float x=m_particle[m_loop].x;               // Grab Our Particle X Position
-    		float y=m_particle[m_loop].y;               // Grab Our Particle Y Position
-    		float z=m_particle[m_loop].z+m_zoom;              // Particle Z Pos + Zoom
+    		float x=m_particle[loop].x;               // Grab Our Particle X Position
+    		float y=m_particle[loop].y;               // Grab Our Particle Y Position
+    		float z=m_particle[loop].z+m_zoom;              // Particle Z Pos + Zoom
 
     		// Draw The Particle Using Our RGB Values, Fade The Particle Based On It's Life
-    		glColor4f(m_particle[m_loop].r,m_particle[m_loop].g,m_particle[m_loop].b,m_particle[m_loop].life);
+    		glColor4f(m_particle[loop].r,m_particle[loop].g,m_particle[loop].b,m_particle[loop].life);
 
     		glBegin(GL_TRIANGLE_STRIP);             // Build Quad From A Triangle Strip
     		glTexCoord2d(1,1); glVertex3f(x+0.5f,y+0.5f,z); // Top Right
@@ -97,27 +96,27 @@ void Sample_19::draw()
     		glTexCoord2d(0,0); glVertex3f(x-0.5f,y-0.5f,z); // Bottom Left
     		glEnd();                        // Done Building Triangle Strip
 
-    		m_particle[m_loop].x+=m_particle[m_loop].xi/(m_slowdown*1000);    // Move On The X Axis By X Speed
-    		m_particle[m_loop].y+=m_particle[m_loop].yi/(m_slowdown*1000);    // Move On The Y Axis By Y Speed
-    		m_particle[m_loop].z+=m_particle[m_loop].zi/(m_slowdown*1000);    // Move On The Z Axis By Z Speed
-    		m_particle[m_loop].xi+=m_particle[m_loop].xg;           // Take Pull On X Axis Into Account
-    		m_particle[m_loop].yi+=m_particle[m_loop].yg;           // Take Pull On Y Axis Into Account
-    		m_particle[m_loop].zi+=m_particle[m_loop].zg;           // Take Pull On Z Axis Into Account
-    		m_particle[m_loop].life-=m_particle[m_loop].fade;       // Reduce Particles Life By 'Fade'
+    		m_particle[loop].x+=m_particle[loop].xi/(m_slowdown*1000);    // Move On The X Axis By X Speed
+    		m_particle[loop].y+=m_particle[loop].yi/(m_slowdown*1000);    // Move On The Y Axis By Y Speed
+    		m_particle[loop].z+=m_particle[loop].zi/(m_slowdown*1000);    // Move On The Z Axis By Z Speed
+    		m_particle[loop].xi+=m_particle[loop].xg;           // Take Pull On X Axis Into Account
+    		m_particle[loop].yi+=m_particle[loop].yg;           // Take Pull On Y Axis Into Account
+    		m_particle[loop].zi+=m_particle[loop].zg;           // Take Pull On Z Axis Into Account
+    		m_particle[loop].life-=m_particle[loop].fade;       // Reduce Particles Life By 'Fade'
 
-    		if (m_particle[m_loop].life<0.0f)                    // If Particle Is Burned Out
+    		if (m_particle[loop].life<0.0f)                    // If Particle Is Burned Out
     		{
-    			m_particle[m_loop].life=1.0f;               // Give It New Life
-    			m_particle[m_loop].fade=float(rand()%100)/1000.0f+0.003f;   // Random Fade Value
-    			m_particle[m_loop].x=0.0f;                  // Center On X Axis
-    			m_particle[m_loop].y=0.0f;                  // Center On Y Axis
-    			m_particle[m_loop].z=0.0f;                  // Center On Z Axis
-    			m_particle[m_loop].xi=m_xspeed+float((rand()%60)-32.0f);  // X Axis Speed And Direction
-    			m_particle[m_loop].yi=m_yspeed+float((rand()%60)-30.0f);  // Y Axis Speed And Direction
-    			m_particle[m_loop].zi=float((rand()%60)-30.0f);     // Z Axis Speed And Direction
-    		    m_particle[m_loop].r=s_colors[m_col][0];            // Select Red From Color Table
-    		    m_particle[m_loop].g=s_colors[m_col][1];            // Select Green From Color Table
-    		    m_particle[m_loop].b=s_colors[m_col][2];            // Select Blue From Color Table
+    			m_particle[loop].life=1.0f;               // Give It New Life
+    			m_particle[loop].fade=float(rand()%100)/1000.0f+0.003f;   // Random Fade Value
+    			m_particle[loop].x=0.0f;                  // Center On X Axis
+    			m_particle[loop].y=0.0f;                  // Center On Y Axis
+    			m_particle[loop].z=0.0f;                  // Center On Z Axis
+    			m_particle[loop].xi=m_xspeed+float((rand()%60)-32.0f);  // X Axis Speed And Direction
+    			m_particle[loop].yi=m_yspeed+float((rand()%60)-30.0f);  // Y Axis Speed And Direction
+    			m_particle[loop].zi=float((rand()%60)-30.0f);     // Z Axis Speed And Direction
+    		    m_particle[loop].r=s_colors[m_col][0];            // Select Red From Color Table
+    		    m_particle[loop].g=s_colors[m_col][1];            // Select Green From Color Table
+    		    m_particle[loop].b=s_colors[m_col][2];            // Select Blue From Color Table
     		}
     	}
     }
@@ -168,36 +167,51 @@ bool Sample_19::sendMessage(int message, int mode, int x, int y)
 {
 	switch (message) {
 	case SDLK_UP:
-		if (m_particle[m_loop].yg<1.5f)
-			m_particle[m_loop].yg+=0.01f;
+		for (int loop=0;loop<MAX_PARTICLES;++loop)
+		{
+		if (m_particle[loop].yg<1.5f)
+			m_particle[loop].yg+=0.01f;
+		}
 		if (m_yspeed<200)
 			m_yspeed+=1.0f;
 		else
 			m_yspeed-=1.0f;
 		break;
 	case SDLK_DOWN:
-		if (m_particle[m_loop].yg>-1.5f)
-			m_particle[m_loop].yg-=0.01f;
+		for (int loop=0;loop<MAX_PARTICLES;++loop)
+		{
+		if (m_particle[loop].yg>-1.5f)
+			m_particle[loop].yg-=0.01f;
+		}
 		if (m_xspeed<200)
 			m_xspeed+=1.0f;
 		else
 			m_xspeed-=1.0f;
 		break;
 	case SDLK_RIGHT:
-		if (m_particle[m_loop].xg<1.5f)
-			m_particle[m_loop].xg+=0.01f;
+		for (int loop=0;loop<MAX_PARTICLES;++loop)
+		{
+		if (m_particle[loop].xg<1.5f)
+			m_particle[loop].xg+=0.01f;
+		}
 		break;
 	case SDLK_LEFT:
-		if (m_particle[m_loop].xg>-1.5f)
-			m_particle[m_loop].xg-=0.01f;
+		for (int loop=0;loop<MAX_PARTICLES;++loop)
+		{
+		if (m_particle[loop].xg>-1.5f)
+			m_particle[loop].xg-=0.01f;
+		}
 		break;
 	case SDLK_TAB:
-		m_particle[m_loop].x=0.0f;                  // Center On X Axis
-		m_particle[m_loop].y=0.0f;                  // Center On Y Axis
-		m_particle[m_loop].z=0.0f;                  // Center On Z Axis
-		m_particle[m_loop].xi=float((rand()%50)-26.0f)*10.0f;   // Random Speed On X Axis
-		m_particle[m_loop].yi=float((rand()%50)-25.0f)*10.0f;   // Random Speed On Y Axis
-		m_particle[m_loop].zi=float((rand()%50)-25.0f)*10.0f;   // Random Speed On Z Axis
+		for (int loop=0;loop<MAX_PARTICLES;++loop)
+		{
+		m_particle[loop].x=0.0f;                  // Center On X Axis
+		m_particle[loop].y=0.0f;                  // Center On Y Axis
+		m_particle[loop].z=0.0f;                  // Center On Z Axis
+		m_particle[loop].xi=float((rand()%50)-26.0f)*10.0f;   // Random Speed On X Axis
+		m_particle[loop].yi=float((rand()%50)-25.0f)*10.0f;   // Random Speed On Y Axis
+		m_particle[loop].zi=float((rand()%50)-25.0f)*10.0f;   // Random Speed On Z Axis
+		}
 		break;
 	case SDLK_PLUS:
 		if (m_slowdown>1.0f) m_slowdown-=0.01f;        // Speed Up Particles
@@ -225,6 +239,5 @@ bool Sample_19::sendMessage(int message, int mode, int x, int y)
 		break;
 	}
 
-	drawGLScene();
 	return true;
 }

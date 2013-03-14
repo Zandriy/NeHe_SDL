@@ -35,9 +35,9 @@ public:
 	}
 
 protected:
-	void draw();
-	void initGL();
-	void restoreGL();
+	virtual void draw();
+	virtual void initGL();
+	virtual void restoreGL();
 
 private:
 	GLfloat     m_rtri;                       // Angle For The Triangle

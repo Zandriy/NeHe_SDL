@@ -17,6 +17,7 @@ public:
 	~OGL_Consumer();
 	bool setSample(unsigned int SampleNum);
 	bool sendMessage(unsigned int SampleNum, int message, int mode, int x, int y);
+	void sendIdleMessage();
 	void reshape(unsigned int width, unsigned int height);
 	void drawGLScene();
 	char* sampleName() const;

@@ -116,7 +116,10 @@ int OGL_Application::exec()
 	{
 		// draw the scene
 		if ( m_isActive )
+		{
 			drawGLScene();
+			m_OGL_Consumer->sendIdleMessage();
+		}
 
 		// handle the events in the queue
 		while ( SDL_PollEvent( &event ) )
@@ -155,8 +158,6 @@ int OGL_Application::exec()
 				m_breakReason = SDL_QUIT;
 				break;
 			default:
-				if ( m_isActive )
-					m_OGL_Consumer->sendMessage(m_curSample, 0, 0, 0, 0);
 				break;
 			}
 		}

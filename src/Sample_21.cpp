@@ -299,8 +299,6 @@ void Sample_21::restoreGL()
 
 bool Sample_21::sendMessage(int message, int mode, int x, int y)
 {
-	bool result = true;
-
 	switch (message) {
 	case SDLK_a:
 		m_anti=!m_anti;                 // Toggle Antialiasing
@@ -357,13 +355,18 @@ bool Sample_21::sendMessage(int message, int mode, int x, int y)
 		}
 	    break;
 	default:
-		result = false;
+		return false;
 		break;
 	}
 
+	return true;
+}
+
+void Sample_21::sendIdleMessage()
+{
 	int loop1, loop2;
 
-	if (!message && !mode && !x && !y && !m_gameover)                // If Game Isn't Over And Programs Active Move Objects
+	if (!m_gameover)                // If Game Isn't Over And Programs Active Move Objects
 	{
 		for (loop1=0; loop1<(m_stage*m_level); loop1++)  // Loop Through The Different Stages
 		{
@@ -511,9 +514,6 @@ bool Sample_21::sendMessage(int message, int mode, int x, int y)
 
 		m_delay++;                        // Increase The Enemy Delay Counter
 	}
-
-	drawGLScene();
-	return result;
 }
 
 void Sample_21::ResetObjects()

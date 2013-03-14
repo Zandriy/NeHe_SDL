@@ -65,6 +65,8 @@ OGL_Consumer::OGL_Consumer()
 
 	if ( ++i != Sample_QTY )
 		throw this;
+
+	m_Sample[m_SampleNum]->initGL();
 }
 
 OGL_Consumer::~OGL_Consumer()
@@ -81,13 +83,24 @@ bool OGL_Consumer::setSample(unsigned int SampleNum)
 	if (SampleNum >= Sample_QTY)
 		return false;
 
+	if (m_SampleNum == SampleNum)
+		return true;
+
+	m_Sample[m_SampleNum]->restoreGL();
 	m_SampleNum = SampleNum;
+	m_Sample[m_SampleNum]->initGL();
+
 	return true;
 }
 
 bool OGL_Consumer::sendMessage(unsigned int SampleNum, int message, int mode, int x, int y)
 {
 	return m_Sample[m_SampleNum]->sendMessage(message, mode, x, y);
+}
+
+void OGL_Consumer::sendIdleMessage()
+{
+	m_Sample[m_SampleNum]->sendIdleMessage();
 }
 
 void OGL_Consumer::reshape(unsigned int width, unsigned int height)
@@ -98,7 +111,7 @@ void OGL_Consumer::reshape(unsigned int width, unsigned int height)
 // Here goes our drawing code
 void OGL_Consumer::drawGLScene()
 {
-	m_Sample[m_SampleNum]->drawGLScene();
+	m_Sample[m_SampleNum]->draw();
 }
 
 char* OGL_Consumer::sampleName() const
