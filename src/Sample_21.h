@@ -105,10 +105,12 @@ private:
 	OGLImageRec	m_imagePict;
 
 	void ResetObjects();
+	void ResetGrid();
+	void ResetHourglass();
 
 	void buildFont();
 	void glPrint( GLint x, GLint y, int set, const char *fmt, ... );
-	void playSound( char *sound, int repeat );
+	void playSound( const char *sound, int repeat );
 };
 
 #endif /* Sample_21_H_ */

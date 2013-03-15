@@ -17,7 +17,7 @@
 int	Sample_21::s_steps[STEPS]={ 1, 2, 4, 5, 10, 20 };                // Stepping Values For Slow Video Adjustment
 
 Sample_21::Sample_21()
-:	m_filled(false)
+:	m_filled(true)
 ,	m_gameover(false)
 ,	m_anti(false)
 ,	m_delay(0)
@@ -40,7 +40,9 @@ Sample_21::Sample_21()
 
 	m_base = glGenLists( SYM_QTY );
 
-	ResetObjects();
+	ResetObjects(); // Reset Player / Enemy Positions
+	ResetHourglass();
+	ResetGrid();
 
 #ifdef SOUND
 	// Initialize Audio sub system
@@ -56,7 +58,7 @@ Sample_21::Sample_21()
 		fprintf( stderr, "Unable to open audio: %s\n", SDL_GetError( ) );
 	}
 	// Load in the music
-	m_music = Mix_LoadMUS( (char*)&"data/lktheme.mod" );
+	m_music = Mix_LoadMUS( "data/lktheme.mod" );
 #endif
 }
 
@@ -111,16 +113,16 @@ void Sample_21::draw()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);         // Clear Screen And Depth Buffer
 	glBindTexture(GL_TEXTURE_2D, m_texture[0]);               // Select Our Font Texture
 	glColor3f(1.0f,0.5f,1.0f);                      // Set Color To Purple
-	glPrint(207,24,0,(char*)&"GRID CRAZY");                     // Write GRID CRAZY On The Screen
+	glPrint(207,24,0,"GRID CRAZY");                     // Write GRID CRAZY On The Screen
 	glColor3f(1.0f,1.0f,0.0f);                      // Set Color To Yellow
-	glPrint(20,20,1,(char*)&"Level:%2i",m_level2);                    // Write Actual Level Stats
-	glPrint(20,40,1,(char*)&"Stage:%2i",m_stage);                 // Write Stage Stats
+	glPrint(20,20,1,"Level:%2i",m_level2);                    // Write Actual Level Stats
+	glPrint(20,40,1,"Stage:%2i",m_stage);                 // Write Stage Stats
 
 	if (m_gameover)                               // Is The Game Over?
 	{
 		glColor3ub(rand()%255,rand()%255,rand()%255);           // Pick A Random Color
-		glPrint(472,20,1,(char*)&"GAME OVER");                  // Write GAME OVER To The Screen
-		glPrint(456,40,1,(char*)&"PRESS SPACE");                // Write PRESS SPACE To The Screen
+		glPrint(472,20,1,"GAME OVER");                  // Write GAME OVER To The Screen
+		glPrint(456,40,1,"PRESS SPACE");                // Write PRESS SPACE To The Screen
 	}
 	for (int loop=0; loop<m_lives-1; loop++)                    // Loop Through Lives Minus Current Life
 	{
@@ -280,6 +282,11 @@ void Sample_21::draw()
 		glVertex2d(-7, 7);                  // Bottom Left Of Enemy
 		glVertex2d( 7,-7);                  // Top Right Of Enemy
 		glEnd();                            // Done Drawing Enemy Blade
+	}
+
+	if (m_anti)                               // Is Anti TRUE?
+	{
+		glDisable(GL_LINE_SMOOTH);                   // If So, Enable Antialiasing
 	}
 }
 
@@ -472,10 +479,12 @@ void Sample_21::sendIdleMessage()
 				if (m_lives==0)           // Are We Out Of Lives?
 				{
 					m_gameover=true;      // If So, gameover Becomes TRUE
+					ResetHourglass();
+					ResetGrid();
 				}
 
 				ResetObjects();         // Reset Player / Enemy Positions
-				playSound((char*)&"data/die.wav", 0);  // Play The Death Sound
+				playSound("data/die.wav", 0);  // Play The Death Sound
 			}
 		}
 
@@ -498,7 +507,7 @@ void Sample_21::sendIdleMessage()
 
 		if (m_filled)                     // Is The Grid Filled In?
 		{
-			playSound((char*)&"data/complete.wav", 0); // If So, Play The Level Complete Sound
+			playSound("data/complete.wav", 0); // If So, Play The Level Complete Sound
 			m_stage++;                    // Increase The Stage
 			if (m_stage>3)                 // Is The Stage Higher Than 3?
 			{
@@ -516,28 +525,14 @@ void Sample_21::sendIdleMessage()
 				}
 			}
 			ResetObjects();                 // Reset Player / Enemy Positions
-
-			for (loop1=0; loop1<11; loop1++)     // Loop Through The Grid X Coordinates
-			{
-				for (loop2=0; loop2<11; loop2++) // Loop Through The Grid Y Coordinates
-				{
-					if (loop1<10)            // If X Coordinate Is Less Than 10
-					{
-						m_hline[loop1][loop2]=false;  // Set The Current Horizontal Value To FALSE
-					}
-					if (loop2<10)            // If Y Coordinate Is Less Than 10
-					{
-						m_vline[loop1][loop2]=false;  // Set The Current Vertical Value To FALSE
-					}
-				}
-			}
+			ResetGrid();
 		}
 
 		// If The Player Hits The Hourglass While It's Being Displayed On The Screen
 		if ((m_player.fx==m_hourglass.x*60) && (m_player.fy==m_hourglass.y*40) && (m_hourglass.fx==1))
 		{
 			// Play Freeze Enemy Sound
-			playSound((char*)&"data/freeze.wav", -1);
+			playSound("data/freeze.wav", -1);
 			m_hourglass.fx=2;                 // Set The hourglass fx Variable To Two
 			m_hourglass.fy=0;                 // Set The hourglass fy Variable To Zero
 		}
@@ -557,7 +552,7 @@ void Sample_21::sendIdleMessage()
 		m_hourglass.fy+=s_steps[m_adjust];                // Increase The hourglass fy Variable
 		if ((m_hourglass.fx==0) && (m_hourglass.fy>6000/m_level))  // Is The hourglass fx Variable Equal To 0 And The fy
 		{                           // Variable Greater Than 6000 Divided By The Current Level?
-			playSound((char*)&"data/hourglass.wav", 0);   // If So, Play The Hourglass Appears Sound
+			playSound("data/hourglass.wav", 0);   // If So, Play The Hourglass Appears Sound
 			m_hourglass.x=rand()%10+1;            // Give The Hourglass A Random X Value
 			m_hourglass.y=rand()%11;              // Give The Hourglass A Random Y Value
 			m_hourglass.fx=1;                 // Set hourglass fx Variable To One (Hourglass Stage)
@@ -600,6 +595,32 @@ void Sample_21::ResetObjects()
 		// Set Fine Y To Match
 		m_enemy[loop].fy = m_enemy[loop].y * 40;
 	}
+}
+
+void Sample_21::ResetGrid()
+{
+	for (int loop1=0; loop1<11; loop1++)     // Loop Through The Grid X Coordinates
+	{
+		for (int loop2=0; loop2<11; loop2++) // Loop Through The Grid Y Coordinates
+		{
+			if (loop1<10)            // If X Coordinate Is Less Than 10
+			{
+				m_hline[loop1][loop2]=false;  // Set The Current Horizontal Value To FALSE
+			}
+			if (loop2<10)            // If Y Coordinate Is Less Than 10
+			{
+				m_vline[loop1][loop2]=false;  // Set The Current Vertical Value To FALSE
+			}
+		}
+	}
+}
+
+void Sample_21::ResetHourglass()
+{
+m_hourglass.x = 0;
+m_hourglass.y = 0;
+m_hourglass.fx = 0;
+m_hourglass.fy = 0;
 }
 
 void Sample_21::buildFont()
@@ -657,7 +678,7 @@ void Sample_21::glPrint(GLint x, GLint y, int set, const char *fmt, ...)        
 	glDisable(GL_TEXTURE_2D);                       // Disable Texture Mapping
 }
 
-void Sample_21::playSound( char *sound, int repeat )
+void Sample_21::playSound( const char *sound, int repeat )
 {
 #ifdef SOUND
 
