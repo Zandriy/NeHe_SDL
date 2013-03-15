@@ -304,7 +304,7 @@ bool Sample_21::sendMessage(int message, int mode, int x, int y)
 		m_anti=!m_anti;                 // Toggle Antialiasing
 		break;
 	case SDLK_RIGHT:
-	    if ( ( m_player.x < 10 ) && ( m_player.fx == m_player.x * 60 ) &&
+	    if ( ( m_player.x < GAP_QTY ) && ( m_player.fx == m_player.x * 60 ) &&
 		 ( m_player.fy == m_player.y * 40 ) )
 		{
 		    /* Mark The Current Horizontal Border As Filled */
@@ -334,7 +334,7 @@ bool Sample_21::sendMessage(int message, int mode, int x, int y)
 		}
 	    break;
 	case SDLK_DOWN:
-	    if ( ( m_player.y < 10 ) && ( m_player.fx == m_player.x * 60 ) &&
+	    if ( ( m_player.y < GAP_QTY ) && ( m_player.fx == m_player.x * 60 ) &&
 		 ( m_player.fy == m_player.y * 40 ) )
 		{
 		    /* Mark The Current Vertical Border As Filled */
@@ -430,6 +430,23 @@ void Sample_21::sendIdleMessage()
 				playSound("data/die.wav", 0);  // Play The Death Sound
 			}
 		}
+
+	    if (m_player.fx<m_player.x*60)           // Is Fine Position On X Axis Lower Than Intended Position?
+	    {
+	        m_player.fx+=s_steps[m_adjust];       // If So, Increase The Fine X Position
+	    }
+	    if (m_player.fx>m_player.x*60)           // Is Fine Position On X Axis Greater Than Intended Position?
+	    {
+	        m_player.fx-=s_steps[m_adjust];       // If So, Decrease The Fine X Position
+	    }
+	    if (m_player.fy<m_player.y*40)           // Is Fine Position On Y Axis Lower Than Intended Position?
+	    {
+	        m_player.fy+=s_steps[m_adjust];       // If So, Increase The Fine Y Position
+	    }
+	    if (m_player.fy>m_player.y*40)           // Is Fine Position On Y Axis Lower Than Intended Position?
+	    {
+	        m_player.fy-=s_steps[m_adjust];       // If So, Decrease The Fine Y Position
+	    }
 
 		if (m_filled)                     // Is The Grid Filled In?
 		{
