@@ -9,7 +9,7 @@
 #define Sample_21_H_
 
 // Comment this out if you don't want sound.
-//#define SOUND
+#define SOUND
 
 #include "Sample.h"
 #include "OGLImageRec.h"
@@ -97,7 +97,7 @@ private:
 #ifdef SOUND
 	// audio chunk
 	Mix_Chunk *chunk;
-	Mix_Music *music;
+	_Mix_Music *music;
 #endif
 
 	OGLImageRec	m_imageFont;

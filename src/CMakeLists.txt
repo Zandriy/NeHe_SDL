@@ -7,10 +7,16 @@ if(NOT SDL_FOUND)
 	message( FATAL ERROR "SDL not found!")
 endif(NOT SDL_FOUND)
 
+find_package(SDL_mixer REQUIRED)
+
+if(NOT SDLMIXER_FOUND)
+	message( FATAL ERROR "SDL MIXER not found!")
+endif(NOT SDLMIXER_FOUND)
+
 find_package(OpenGL REQUIRED)
 
 if(NOT OPENGL_FOUND)
-	message( FATAL ERROR "GL not found!")
+	message( FATAL ERROR "OpenGL not found!")
 endif(NOT OPENGL_FOUND)
 
 IF(APPLE)
@@ -50,11 +56,13 @@ SET(NeHe_PROJECT_TARGET prg)
 
 include_directories(
 	${SDL_INCLUDE_DIR}
+	${SDLMIXER_INCLUDE_DIR}
 	${OPENGL_INCLUDE_DIR}
 	)
 
 link_libraries(
 	${SDL_LIBRARY}
+	${SDLMIXER_LIBRARY}
 	${OPENGL_LIBRARY}
 	)
 
@@ -64,8 +72,10 @@ message("============ INFO ============")
 message("OS: " ${CMAKE_SYSTEM})
 message("PROCESSOR: " ${CMAKE_SYSTEM_PROCESSOR})
 message("SDL INCLUDE: " ${SDL_INCLUDE_DIR})
+message("SDL MIXER INCLUDE: " ${SDLMIXER_INCLUDE_DIR})
 message("OPENGL INCLUDE: " ${OPENGL_INCLUDE_DIR})
 message("SDL LIB: " ${SDL_LIBRARY})
+message("SDL MIXER LIB: " ${SDLMIXER_LIBRARY})
 message("OpenGL LIB: " ${OPENGL_LIBRARY})
 message("==============================")
 message(" !!! always do `pwd -P` before `rm` !!!")
