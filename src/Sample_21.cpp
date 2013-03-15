@@ -3,7 +3,7 @@
  *
  *  Created on: Mar 12, 2013
  *      Author: Andrew Zhabura
-*/
+ */
 
 #include "Sample_21.h"
 
@@ -30,6 +30,7 @@ Sample_21::Sample_21()
 #ifdef SOUND
 ,	m_chunk(NULL)
 ,	m_music(NULL)
+,	m_play(true)
 #endif
 {
 	m_imageFont.loadBMP( "data/font_1.bmp" );
@@ -42,20 +43,20 @@ Sample_21::Sample_21()
 	ResetObjects();
 
 #ifdef SOUND
-    // Initialize Audio sub system
-    if ( SDL_InitSubSystem( SDL_INIT_AUDIO ) == -1 )
+	// Initialize Audio sub system
+	if ( SDL_InitSubSystem( SDL_INIT_AUDIO ) == -1 )
 	{
-	    fprintf( stderr, "Could not initialize audio subsystem: %s\n",
-		     SDL_GetError( ) );
+		fprintf( stderr, "Could not initialize audio subsystem: %s\n",
+				SDL_GetError( ) );
 	}
 
-    // Open the sound device
-    if ( Mix_OpenAudio( 22060, AUDIO_S16SYS, 2, 512 ) < 0 )
+	// Open the sound device
+	if ( Mix_OpenAudio( 22060, AUDIO_S16SYS, 2, 512 ) < 0 )
 	{
-	    fprintf( stderr, "Unable to open audio: %s\n", SDL_GetError( ) );
+		fprintf( stderr, "Unable to open audio: %s\n", SDL_GetError( ) );
 	}
-    // Load in the music
-    m_music = Mix_LoadMUS( "data/lktheme.mod" );
+	// Load in the music
+	m_music = Mix_LoadMUS( (char*)&"data/lktheme.mod" );
 #endif
 }
 
@@ -285,8 +286,8 @@ void Sample_21::draw()
 void Sample_21::initGL()
 {
 #ifdef SOUND
-    // Start playing the music
-	if (m_music)
+	// Start playing the music
+	if (m_music && m_play)
 		Mix_PlayMusic( m_music, -1 );
 #endif
 
@@ -322,8 +323,8 @@ void Sample_21::initGL()
 void Sample_21::restoreGL()
 {
 #ifdef SOUND
-    // Stop playing the music
-	if (m_music)
+	// Stop playing the music
+	if (m_music && m_play)
 		Mix_HaltMusic();
 #endif
 
@@ -338,6 +339,18 @@ bool Sample_21::sendMessage(int message, int mode, int x, int y)
 	case SDLK_a:
 		m_anti=!m_anti;                 // Toggle Antialiasing
 		break;
+#ifdef SOUND
+	case SDLK_m:
+		if (m_music)
+		{
+			m_play = !m_play;
+			if (m_play)
+				Mix_PlayMusic( m_music, -1 );
+			else
+				Mix_HaltMusic();
+		}
+		break;
+#endif
 	case SDLK_RIGHT:
 		if ( ( m_player.x < GAP_QTY ) && ( m_player.fx == m_player.x * 60 ) &&
 				( m_player.fy == m_player.y * 40 ) )
@@ -462,7 +475,7 @@ void Sample_21::sendIdleMessage()
 				}
 
 				ResetObjects();         // Reset Player / Enemy Positions
-				playSound("data/die.wav", 0);  // Play The Death Sound
+				playSound((char*)&"data/die.wav", 0);  // Play The Death Sound
 			}
 		}
 
@@ -485,7 +498,7 @@ void Sample_21::sendIdleMessage()
 
 		if (m_filled)                     // Is The Grid Filled In?
 		{
-			playSound("data/complete.wav", 0); // If So, Play The Level Complete Sound
+			playSound((char*)&"data/complete.wav", 0); // If So, Play The Level Complete Sound
 			m_stage++;                    // Increase The Stage
 			if (m_stage>3)                 // Is The Stage Higher Than 3?
 			{
@@ -524,7 +537,7 @@ void Sample_21::sendIdleMessage()
 		if ((m_player.fx==m_hourglass.x*60) && (m_player.fy==m_hourglass.y*40) && (m_hourglass.fx==1))
 		{
 			// Play Freeze Enemy Sound
-			playSound("data/freeze.wav", -1);
+			playSound((char*)&"data/freeze.wav", -1);
 			m_hourglass.fx=2;                 // Set The hourglass fx Variable To Two
 			m_hourglass.fy=0;                 // Set The hourglass fy Variable To Zero
 		}
@@ -544,7 +557,7 @@ void Sample_21::sendIdleMessage()
 		m_hourglass.fy+=s_steps[m_adjust];                // Increase The hourglass fy Variable
 		if ((m_hourglass.fx==0) && (m_hourglass.fy>6000/m_level))  // Is The hourglass fx Variable Equal To 0 And The fy
 		{                           // Variable Greater Than 6000 Divided By The Current Level?
-			playSound("data/hourglass.wav", 0);   // If So, Play The Hourglass Appears Sound
+			playSound((char*)&"data/hourglass.wav", 0);   // If So, Play The Hourglass Appears Sound
 			m_hourglass.x=rand()%10+1;            // Give The Hourglass A Random X Value
 			m_hourglass.y=rand()%11;              // Give The Hourglass A Random Y Value
 			m_hourglass.fx=1;                 // Set hourglass fx Variable To One (Hourglass Stage)

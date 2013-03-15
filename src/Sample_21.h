@@ -52,7 +52,7 @@ public:
 	virtual void reshape(int width, int height);
 	virtual char* name() const
 	{
-		return (char*)&"21. Lines, Antialiasing, Timing, Ortho View And Simple Sounds";
+		return (char*)&"21. Lines,Antialiasing,Timing,Ortho View And Simple Sounds(a,m,arrows,space)";
 	}
 	virtual int width() const
 	{
@@ -98,6 +98,7 @@ private:
 	// audio chunk
 	Mix_Chunk *m_chunk;
 	_Mix_Music *m_music;
+	bool m_play;
 #endif
 
 	OGLImageRec	m_imageFont;
