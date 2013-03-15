@@ -27,6 +27,10 @@ Sample_21::Sample_21()
 ,	m_level2(m_level)
 ,	m_stage(1)
 ,	m_base(0)
+#ifdef SOUND
+,	m_chunk(NULL)
+,	m_music(NULL)
+#endif
 {
 	m_imageFont.loadBMP( "data/font_1.bmp" );
 	m_imagePict.loadBMP( "data/image.bmp" );
@@ -47,14 +51,14 @@ Sample_21::~Sample_21()
 	glDeleteTextures( TEX_QTY, &m_texture[TEX_1] );
 
 #ifdef SOUND
-	// Stop playing the music
+	// Stop playing the m_music
 	Mix_HaltMusic( );
 
-	// Free up the memory for the music
-	Mix_FreeMusic( music );
+	// Free up the memory for the m_music
+	Mix_FreeMusic( m_music );
 
 	// Free up any memory for the sfx
-	Mix_FreeChunk( chunk );
+	Mix_FreeChunk( m_chunk );
 
 	// Close our audio device
 	Mix_CloseAudio( );
@@ -304,56 +308,56 @@ bool Sample_21::sendMessage(int message, int mode, int x, int y)
 		m_anti=!m_anti;                 // Toggle Antialiasing
 		break;
 	case SDLK_RIGHT:
-	    if ( ( m_player.x < GAP_QTY ) && ( m_player.fx == m_player.x * 60 ) &&
-		 ( m_player.fy == m_player.y * 40 ) )
+		if ( ( m_player.x < GAP_QTY ) && ( m_player.fx == m_player.x * 60 ) &&
+				( m_player.fy == m_player.y * 40 ) )
 		{
-		    /* Mark The Current Horizontal Border As Filled */
-	    	m_hline[m_player.x][m_player.y] = true;
-		    /* Move The Player Right */
-	    	m_player.x++;
+			/* Mark The Current Horizontal Border As Filled */
+			m_hline[m_player.x][m_player.y] = true;
+			/* Move The Player Right */
+			m_player.x++;
 		}
-	    break;
+		break;
 	case SDLK_LEFT:
-	    if ( ( m_player.x > 0 ) && ( m_player.fx == m_player.x * 60 ) &&
-		 ( m_player.fy == m_player.y * 40 ) )
+		if ( ( m_player.x > 0 ) && ( m_player.fx == m_player.x * 60 ) &&
+				( m_player.fy == m_player.y * 40 ) )
 		{
-		    /* Move The Player Left */
-	    	m_player.x--;
-		    /* Mark The Current Horizontal Border As Filled */
-	    	m_hline[m_player.x][m_player.y] = true;
+			/* Move The Player Left */
+			m_player.x--;
+			/* Mark The Current Horizontal Border As Filled */
+			m_hline[m_player.x][m_player.y] = true;
 		}
-	    break;
+		break;
 	case SDLK_UP:
-	    if ( ( m_player.y > 0 ) && (m_player.fx == m_player.x * 60 ) &&
-		 ( m_player.fy == m_player.y * 40 ) )
+		if ( ( m_player.y > 0 ) && (m_player.fx == m_player.x * 60 ) &&
+				( m_player.fy == m_player.y * 40 ) )
 		{
-		    /* Move The Player Up */
-	    	m_player.y--;
-		    /* Mark The Current Vertical Border As Filled */
-	    	m_vline[m_player.x][m_player.y] = true;
+			/* Move The Player Up */
+			m_player.y--;
+			/* Mark The Current Vertical Border As Filled */
+			m_vline[m_player.x][m_player.y] = true;
 		}
-	    break;
+		break;
 	case SDLK_DOWN:
-	    if ( ( m_player.y < GAP_QTY ) && ( m_player.fx == m_player.x * 60 ) &&
-		 ( m_player.fy == m_player.y * 40 ) )
+		if ( ( m_player.y < GAP_QTY ) && ( m_player.fx == m_player.x * 60 ) &&
+				( m_player.fy == m_player.y * 40 ) )
 		{
-		    /* Mark The Current Vertical Border As Filled */
-	    	m_vline[m_player.x][m_player.y] = true;
-		    /* Move The Player Down */
-	    	m_player.y++;
+			/* Mark The Current Vertical Border As Filled */
+			m_vline[m_player.x][m_player.y] = true;
+			/* Move The Player Down */
+			m_player.y++;
 		}
-	    break;
+		break;
 	case SDLK_SPACE:
-	    if ( m_gameover )
+		if ( m_gameover )
 		{
-	    	m_gameover = false; /* gameover Becomes FALSE             */
-	    	m_filled   = true;  /* filled Becomes TRUE                */
-	    	m_level    = 1;     /* Starting Level Is Set Back To One  */
-	    	m_level2   = 1;     /* Displayed Level Is Also Set To One */
-	    	m_stage    = 1;     /* Game Stage Is Set To Zero          */
-	    	m_lives    = 5;     /* Lives Is Set To Five               */
+			m_gameover = false; /* gameover Becomes FALSE             */
+			m_filled   = true;  /* filled Becomes TRUE                */
+			m_level    = 1;     /* Starting Level Is Set Back To One  */
+			m_level2   = 1;     /* Displayed Level Is Also Set To One */
+			m_stage    = 1;     /* Game Stage Is Set To Zero          */
+			m_lives    = 5;     /* Lives Is Set To Five               */
 		}
-	    break;
+		break;
 	default:
 		return false;
 		break;
@@ -431,65 +435,65 @@ void Sample_21::sendIdleMessage()
 			}
 		}
 
-	    if (m_player.fx<m_player.x*60)           // Is Fine Position On X Axis Lower Than Intended Position?
-	    {
-	        m_player.fx+=s_steps[m_adjust];       // If So, Increase The Fine X Position
-	    }
-	    if (m_player.fx>m_player.x*60)           // Is Fine Position On X Axis Greater Than Intended Position?
-	    {
-	        m_player.fx-=s_steps[m_adjust];       // If So, Decrease The Fine X Position
-	    }
-	    if (m_player.fy<m_player.y*40)           // Is Fine Position On Y Axis Lower Than Intended Position?
-	    {
-	        m_player.fy+=s_steps[m_adjust];       // If So, Increase The Fine Y Position
-	    }
-	    if (m_player.fy>m_player.y*40)           // Is Fine Position On Y Axis Lower Than Intended Position?
-	    {
-	        m_player.fy-=s_steps[m_adjust];       // If So, Decrease The Fine Y Position
-	    }
+		if (m_player.fx<m_player.x*60)           // Is Fine Position On X Axis Lower Than Intended Position?
+		{
+			m_player.fx+=s_steps[m_adjust];       // If So, Increase The Fine X Position
+		}
+		if (m_player.fx>m_player.x*60)           // Is Fine Position On X Axis Greater Than Intended Position?
+		{
+			m_player.fx-=s_steps[m_adjust];       // If So, Decrease The Fine X Position
+		}
+		if (m_player.fy<m_player.y*40)           // Is Fine Position On Y Axis Lower Than Intended Position?
+		{
+			m_player.fy+=s_steps[m_adjust];       // If So, Increase The Fine Y Position
+		}
+		if (m_player.fy>m_player.y*40)           // Is Fine Position On Y Axis Lower Than Intended Position?
+		{
+			m_player.fy-=s_steps[m_adjust];       // If So, Decrease The Fine Y Position
+		}
 
 		if (m_filled)                     // Is The Grid Filled In?
 		{
-		    playSound("data/complete.wav", 0); // If So, Play The Level Complete Sound
+			playSound("data/complete.wav", 0); // If So, Play The Level Complete Sound
 			m_stage++;                    // Increase The Stage
-		    if (m_stage>3)                 // Is The Stage Higher Than 3?
-		    {
-		    	m_stage=1;                // If So, Set The Stage To One
-		    	m_level++;                // Increase The Level
-		    	m_level2++;               // Increase The Displayed Level
-		        if (m_level>3)             // Is The Level Greater Than 3?
-		        {
-		        	m_level=3;            // If So, Set The Level To 3
-		        	m_lives++;            // Give The Player A Free Life
-		            if (m_lives>5)         // Does The Player Have More Than 5 Lives?
-		            {
-		            	m_lives=5;        // If So, Set Lives To Five
-		            }
-		        }
-		    }
-		    ResetObjects();                 // Reset Player / Enemy Positions
+			if (m_stage>3)                 // Is The Stage Higher Than 3?
+			{
+				m_stage=1;                // If So, Set The Stage To One
+				m_level++;                // Increase The Level
+				m_level2++;               // Increase The Displayed Level
+				if (m_level>3)             // Is The Level Greater Than 3?
+				{
+					m_level=3;            // If So, Set The Level To 3
+					m_lives++;            // Give The Player A Free Life
+					if (m_lives>5)         // Does The Player Have More Than 5 Lives?
+					{
+						m_lives=5;        // If So, Set Lives To Five
+					}
+				}
+			}
+			ResetObjects();                 // Reset Player / Enemy Positions
 
-		    for (loop1=0; loop1<11; loop1++)     // Loop Through The Grid X Coordinates
-		    {
-		        for (loop2=0; loop2<11; loop2++) // Loop Through The Grid Y Coordinates
-		        {
-		            if (loop1<10)            // If X Coordinate Is Less Than 10
-		            {
-		            	m_hline[loop1][loop2]=false;  // Set The Current Horizontal Value To FALSE
-		            }
-		            if (loop2<10)            // If Y Coordinate Is Less Than 10
-		            {
-		            	m_vline[loop1][loop2]=false;  // Set The Current Vertical Value To FALSE
-		            }
-		        }
-		    }
+			for (loop1=0; loop1<11; loop1++)     // Loop Through The Grid X Coordinates
+			{
+				for (loop2=0; loop2<11; loop2++) // Loop Through The Grid Y Coordinates
+				{
+					if (loop1<10)            // If X Coordinate Is Less Than 10
+					{
+						m_hline[loop1][loop2]=false;  // Set The Current Horizontal Value To FALSE
+					}
+					if (loop2<10)            // If Y Coordinate Is Less Than 10
+					{
+						m_vline[loop1][loop2]=false;  // Set The Current Vertical Value To FALSE
+					}
+				}
+			}
 		}
 
 		// If The Player Hits The Hourglass While It's Being Displayed On The Screen
 		if ((m_player.fx==m_hourglass.x*60) && (m_player.fy==m_hourglass.y*40) && (m_hourglass.fx==1))
 		{
-		    // Play Freeze Enemy Sound
-		    playSound("data/freeze.wav", -1);
+			// Play Freeze Enemy Sound
+			playSound("data/freeze.wav", -1);
 			m_hourglass.fx=2;                 // Set The hourglass fx Variable To Two
 			m_hourglass.fy=0;                 // Set The hourglass fy Variable To Zero
 		}
@@ -509,7 +513,7 @@ void Sample_21::sendIdleMessage()
 		m_hourglass.fy+=s_steps[m_adjust];                // Increase The hourglass fy Variable
 		if ((m_hourglass.fx==0) && (m_hourglass.fy>6000/m_level))  // Is The hourglass fx Variable Equal To 0 And The fy
 		{                           // Variable Greater Than 6000 Divided By The Current Level?
-		    playSound("data/hourglass.wav", 0);   // If So, Play The Hourglass Appears Sound
+			playSound("data/hourglass.wav", 0);   // If So, Play The Hourglass Appears Sound
 			m_hourglass.x=rand()%10+1;            // Give The Hourglass A Random X Value
 			m_hourglass.y=rand()%11;              // Give The Hourglass A Random Y Value
 			m_hourglass.fx=1;                 // Set hourglass fx Variable To One (Hourglass Stage)
@@ -524,7 +528,7 @@ void Sample_21::sendIdleMessage()
 
 		if ((m_hourglass.fx==2) && (m_hourglass.fy>500+(500*m_level)))// Is The hourglass fx Variable Equal To 2 And The fy
 		{                           // Variable Greater Than 500 Plus 500 Times The Current Level?
-		    playSound(NULL, 0);           // If So, Kill The Freeze Sound
+			playSound(NULL, 0);           // If So, Kill The Freeze Sound
 			m_hourglass.fx=0;                 // Set hourglass fx Variable To Zero
 			m_hourglass.fy=0;                 // Set hourglass fy Variable To Zero
 		}
@@ -613,30 +617,30 @@ void Sample_21::playSound( char *sound, int repeat )
 {
 #ifdef SOUND
 
-    if ( sound == NULL )
+	if ( sound == NULL )
 	{
-	    Mix_HaltChannel( 1 );
-	    Mix_FreeChunk( chunk );
-	    chunk = NULL;
+		Mix_HaltChannel( 1 );
+		Mix_FreeChunk( m_chunk );
+		m_chunk = NULL;
 
-	    return;
+		return;
 	}
 
-    if ( chunk )
+	if ( m_chunk )
 	{
-	    Mix_HaltChannel( 1 );
-	    Mix_FreeChunk( chunk );
+		Mix_HaltChannel( 1 );
+		Mix_FreeChunk( m_chunk );
 
-	    chunk = NULL;
+		m_chunk = NULL;
 	}
 
-    chunk = Mix_LoadWAV( sound );
+	m_chunk = Mix_LoadWAV( sound );
 
-    if ( chunk == NULL )
-	fprintf( stderr, "Failed to load sound: %s\n", sound );
+	if ( m_chunk == NULL )
+		fprintf( stderr, "Failed to load sound: %s\n", sound );
 
-    Mix_PlayChannel( -1, chunk, repeat );
+	Mix_PlayChannel( -1, m_chunk, repeat );
 #endif
 
-    return;
+	return;
 }

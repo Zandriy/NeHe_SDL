@@ -96,8 +96,8 @@ private:
 
 #ifdef SOUND
 	// audio chunk
-	Mix_Chunk *chunk;
-	_Mix_Music *music;
+	Mix_Chunk *m_chunk;
+	_Mix_Music *m_music;
 #endif
 
 	OGLImageRec	m_imageFont;
