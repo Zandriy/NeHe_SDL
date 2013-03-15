@@ -265,6 +265,8 @@ void Sample_21::draw()
 
 void Sample_21::initGL()
 {
+	Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
+
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	// set here server attributes (states)
 	glClearColor(0.0, 0.0, 0.0, 0.0);
