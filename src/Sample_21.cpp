@@ -3,7 +3,7 @@
  *
  *  Created on: Mar 12, 2013
  *      Author: Andrew Zhabura
- */
+*/
 
 #include "Sample_21.h"
 
@@ -40,6 +40,23 @@ Sample_21::Sample_21()
 	m_base = glGenLists( SYM_QTY );
 
 	ResetObjects();
+
+#ifdef SOUND
+    // Initialize Audio sub system
+    if ( SDL_InitSubSystem( SDL_INIT_AUDIO ) == -1 )
+	{
+	    fprintf( stderr, "Could not initialize audio subsystem: %s\n",
+		     SDL_GetError( ) );
+	}
+
+    // Open the sound device
+    if ( Mix_OpenAudio( 22060, AUDIO_S16SYS, 2, 512 ) < 0 )
+	{
+	    fprintf( stderr, "Unable to open audio: %s\n", SDL_GetError( ) );
+	}
+    // Load in the music
+    m_music = Mix_LoadMUS( "data/lktheme.mod" );
+#endif
 }
 
 Sample_21::~Sample_21()
@@ -55,10 +72,12 @@ Sample_21::~Sample_21()
 	Mix_HaltMusic( );
 
 	// Free up the memory for the m_music
-	Mix_FreeMusic( m_music );
+	if (m_music)
+		Mix_FreeMusic( m_music );
 
 	// Free up any memory for the sfx
-	Mix_FreeChunk( m_chunk );
+	if (m_chunk)
+		Mix_FreeChunk( m_chunk );
 
 	// Close our audio device
 	Mix_CloseAudio( );
@@ -265,7 +284,11 @@ void Sample_21::draw()
 
 void Sample_21::initGL()
 {
-	Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
+#ifdef SOUND
+    // Start playing the music
+	if (m_music)
+		Mix_PlayMusic( m_music, -1 );
+#endif
 
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	// set here server attributes (states)
@@ -298,6 +321,12 @@ void Sample_21::initGL()
 
 void Sample_21::restoreGL()
 {
+#ifdef SOUND
+    // Stop playing the music
+	if (m_music)
+		Mix_HaltMusic();
+#endif
+
 	// restore server and client attributes (states)
 	glPopClientAttrib();
 	glPopAttrib();
@@ -313,9 +342,9 @@ bool Sample_21::sendMessage(int message, int mode, int x, int y)
 		if ( ( m_player.x < GAP_QTY ) && ( m_player.fx == m_player.x * 60 ) &&
 				( m_player.fy == m_player.y * 40 ) )
 		{
-			/* Mark The Current Horizontal Border As Filled */
+			// Mark The Current Horizontal Border As Filled
 			m_hline[m_player.x][m_player.y] = true;
-			/* Move The Player Right */
+			// Move The Player Right
 			m_player.x++;
 		}
 		break;
@@ -323,9 +352,9 @@ bool Sample_21::sendMessage(int message, int mode, int x, int y)
 		if ( ( m_player.x > 0 ) && ( m_player.fx == m_player.x * 60 ) &&
 				( m_player.fy == m_player.y * 40 ) )
 		{
-			/* Move The Player Left */
+			// Move The Player Left
 			m_player.x--;
-			/* Mark The Current Horizontal Border As Filled */
+			// Mark The Current Horizontal Border As Filled
 			m_hline[m_player.x][m_player.y] = true;
 		}
 		break;
@@ -333,9 +362,9 @@ bool Sample_21::sendMessage(int message, int mode, int x, int y)
 		if ( ( m_player.y > 0 ) && (m_player.fx == m_player.x * 60 ) &&
 				( m_player.fy == m_player.y * 40 ) )
 		{
-			/* Move The Player Up */
+			// Move The Player Up
 			m_player.y--;
-			/* Mark The Current Vertical Border As Filled */
+			// Mark The Current Vertical Border As Filled
 			m_vline[m_player.x][m_player.y] = true;
 		}
 		break;
@@ -343,21 +372,21 @@ bool Sample_21::sendMessage(int message, int mode, int x, int y)
 		if ( ( m_player.y < GAP_QTY ) && ( m_player.fx == m_player.x * 60 ) &&
 				( m_player.fy == m_player.y * 40 ) )
 		{
-			/* Mark The Current Vertical Border As Filled */
+			// Mark The Current Vertical Border As Filled
 			m_vline[m_player.x][m_player.y] = true;
-			/* Move The Player Down */
+			// Move The Player Down
 			m_player.y++;
 		}
 		break;
 	case SDLK_SPACE:
 		if ( m_gameover )
 		{
-			m_gameover = false; /* gameover Becomes FALSE             */
-			m_filled   = true;  /* filled Becomes TRUE                */
-			m_level    = 1;     /* Starting Level Is Set Back To One  */
-			m_level2   = 1;     /* Displayed Level Is Also Set To One */
-			m_stage    = 1;     /* Game Stage Is Set To Zero          */
-			m_lives    = 5;     /* Lives Is Set To Five               */
+			m_gameover = false; // gameover Becomes FALSE
+			m_filled   = true;  // filled Becomes TRUE
+			m_level    = 1;     // Starting Level Is Set Back To One
+			m_level2   = 1;     // Displayed Level Is Also Set To One
+			m_stage    = 1;     // Game Stage Is Set To Zero
+			m_lives    = 5;     // Lives Is Set To Five
 		}
 		break;
 	default:
@@ -640,8 +669,8 @@ void Sample_21::playSound( char *sound, int repeat )
 
 	if ( m_chunk == NULL )
 		fprintf( stderr, "Failed to load sound: %s\n", sound );
-
-	Mix_PlayChannel( -1, m_chunk, repeat );
+	else
+		Mix_PlayChannel( -1, m_chunk, repeat );
 #endif
 
 	return;
