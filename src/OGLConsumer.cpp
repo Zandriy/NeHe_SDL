@@ -36,6 +36,7 @@
 OGL_Consumer::OGL_Consumer()
 :	m_Sample(new Sample * [Sample_QTY])
 ,	m_SampleNum(0)
+,	m_init(true)
 {
 	int i = -1;
 
@@ -65,8 +66,6 @@ OGL_Consumer::OGL_Consumer()
 
 	if ( ++i != Sample_QTY )
 		throw this;
-
-	m_Sample[m_SampleNum]->initGL();
 }
 
 OGL_Consumer::~OGL_Consumer()
@@ -86,9 +85,12 @@ bool OGL_Consumer::setSample(unsigned int SampleNum)
 	if (m_SampleNum == SampleNum)
 		return true;
 
-	m_Sample[m_SampleNum]->restoreGL();
+	if (!m_init)
+	{
+		m_Sample[m_SampleNum]->restoreGL();
+		m_init = true;
+	}
 	m_SampleNum = SampleNum;
-	m_Sample[m_SampleNum]->initGL();
 
 	return true;
 }
@@ -111,6 +113,11 @@ void OGL_Consumer::reshape(unsigned int width, unsigned int height)
 // Here goes our drawing code
 void OGL_Consumer::drawGLScene()
 {
+	if (m_init)
+	{
+		m_Sample[m_SampleNum]->initGL();
+		m_init = false;
+	}
 	m_Sample[m_SampleNum]->draw();
 }
 

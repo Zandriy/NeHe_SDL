@@ -27,6 +27,7 @@ public:
 private:
 	Sample ** m_Sample;
 	unsigned int m_SampleNum;
+	bool m_init;
 };
 
 #endif // OGL_CONSUMER_H_
