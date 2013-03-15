@@ -52,7 +52,7 @@ public:
 	virtual void reshape(int width, int height);
 	virtual const char* name() const
 	{
-		return "21. Lines,Antialiasing,Timing,Ortho View And Simple Sounds(a,m,arrows,space)";
+		return "21. Crazy Grid (a,m,arrows,space)";
 	}
 	virtual int width() const
 	{
