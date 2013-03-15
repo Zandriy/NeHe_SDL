@@ -49,9 +49,9 @@ public:
 	virtual ~Sample_10();
 
 	virtual void reshape(int width, int height);
-	virtual char* name() const
+	virtual const char* name() const
 	{
-		return (char*)&"10. Loading And Moving Through A 3D World (b,f,s,PgUP,PgDOWN,arrows)";
+		return "10. Loading And Moving Through A 3D World (b,f,s,PgUP,PgDOWN,arrows)";
 	}
 	virtual int width() const
 	{

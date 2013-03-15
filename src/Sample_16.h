@@ -29,9 +29,9 @@ public:
 	virtual ~Sample_16();
 
 	virtual void reshape(int width, int height);
-	virtual char* name() const
+	virtual const char* name() const
 	{
-		return (char*)&"16. Cool Looking Fog (f,l,g,PgUP,PgDOWN,arrows)";
+		return "16. Cool Looking Fog (f,l,g,PgUP,PgDOWN,arrows)";
 	}
 	virtual int width() const
 	{

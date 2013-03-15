@@ -32,9 +32,9 @@ public:
 	virtual ~Sample_20();
 
 	virtual void reshape(int width, int height);
-	virtual char* name() const
+	virtual const char* name() const
 	{
-		return (char*)&"20. Masking ( m,Space )";
+		return "20. Masking ( m,Space )";
 	}
 	virtual int width() const
 	{

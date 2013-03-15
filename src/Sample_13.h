@@ -23,9 +23,9 @@ public:
 	virtual ~Sample_13();
 
 	virtual void reshape(int width, int height);
-	virtual char* name() const
+	virtual const char* name() const
 	{
-		return (char*)&"13. Bitmap Fonts (Only Linux)";
+		return "13. Bitmap Fonts (Only Linux)";
 	}
 	virtual int width() const
 	{

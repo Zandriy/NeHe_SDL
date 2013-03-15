@@ -21,9 +21,9 @@ public:
 	virtual ~Sample_03();
 
 	virtual void reshape(int width, int height);
-	virtual char* name() const
+	virtual const char* name() const
 	{
-		return (char*)&"03. Color";
+		return "03. Color";
 	}
 	virtual int width() const
 	{

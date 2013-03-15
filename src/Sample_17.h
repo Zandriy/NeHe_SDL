@@ -30,9 +30,9 @@ public:
 	virtual ~Sample_17();
 
 	virtual void reshape(int width, int height);
-	virtual char* name() const
+	virtual const char* name() const
 	{
-		return (char*)&"17. 2D Texture Font";
+		return "17. 2D Texture Font";
 	}
 	virtual int width() const
 	{

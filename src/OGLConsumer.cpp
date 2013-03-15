@@ -121,7 +121,7 @@ void OGL_Consumer::drawGLScene()
 	m_Sample[m_SampleNum]->draw();
 }
 
-char* OGL_Consumer::sampleName() const
+const char* OGL_Consumer::sampleName() const
 {
 	return m_Sample[m_SampleNum]->name();
 }

@@ -21,9 +21,9 @@ public:
 	virtual ~Sample_02();
 
 	virtual void reshape(int width, int height);
-	virtual char* name() const
+	virtual const char* name() const
 	{
-		return (char*)&"02. First Polygon";
+		return "02. First Polygon";
 	}
 	virtual int width() const
 	{

@@ -22,9 +22,9 @@ public:
 	virtual ~Sample_11();
 
 	virtual void reshape(int width, int height);
-	virtual char* name() const
+	virtual const char* name() const
 	{
-		return (char*)&"11. Flag Effect or Waving Texture";
+		return "11. Flag Effect or Waving Texture";
 	}
 	virtual int width() const
 	{

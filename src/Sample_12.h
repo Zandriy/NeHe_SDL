@@ -22,9 +22,9 @@ public:
 	virtual ~Sample_12();
 
 	virtual void reshape(int width, int height);
-	virtual char* name() const
+	virtual const char* name() const
 	{
-		return (char*)&"12. Display Lists";
+		return "12. Display Lists";
 	}
 	virtual int width() const
 	{

@@ -29,9 +29,9 @@ public:
 	virtual ~Sample_07();
 
 	virtual void reshape(int width, int height);
-	virtual char* name() const
+	virtual const char* name() const
 	{
-		return (char*)&"07. Texture Filters, Lighting & Keyboard Control (f,l,PgUP,PgDOWN,arrows)";
+		return "07. Texture Filters, Lighting & Keyboard Control (f,l,PgUP,PgDOWN,arrows)";
 	}
 	virtual int width() const
 	{

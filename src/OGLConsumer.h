@@ -20,7 +20,7 @@ public:
 	void sendIdleMessage();
 	void reshape(unsigned int width, unsigned int height);
 	void drawGLScene();
-	char* sampleName() const;
+	const char* sampleName() const;
 	int width() const;
 	int height() const;
 

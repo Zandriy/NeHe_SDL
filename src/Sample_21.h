@@ -50,9 +50,9 @@ public:
 	virtual ~Sample_21();
 
 	virtual void reshape(int width, int height);
-	virtual char* name() const
+	virtual const char* name() const
 	{
-		return (char*)&"21. Lines,Antialiasing,Timing,Ortho View And Simple Sounds(a,m,arrows,space)";
+		return "21. Lines,Antialiasing,Timing,Ortho View And Simple Sounds(a,m,arrows,space)";
 	}
 	virtual int width() const
 	{

@@ -23,9 +23,9 @@ public:
 	virtual ~Sample_14();
 
 	virtual void reshape(int width, int height);
-	virtual char* name() const
+	virtual const char* name() const
 	{
-		return (char*)&"14. Outline Fonts (Only Linux) !!! It's not finished";
+		return "14. Outline Fonts (Only Linux) !!! It's not finished";
 	}
 	virtual int width() const
 	{

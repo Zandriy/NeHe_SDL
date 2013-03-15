@@ -22,9 +22,9 @@ public:
 	virtual ~Sample_18();
 
 	virtual void reshape(int width, int height);
-	virtual char* name() const
+	virtual const char* name() const
 	{
-		return (char*)&"18. Quadrics (f,l,PgUP,PgDOWN,arrows,space)";
+		return "18. Quadrics (f,l,PgUP,PgDOWN,arrows,space)";
 	}
 	virtual int width() const
 	{

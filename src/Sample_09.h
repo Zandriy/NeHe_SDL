@@ -25,9 +25,9 @@ public:
 	virtual ~Sample_09();
 
 	virtual void reshape(int width, int height);
-	virtual char* name() const
+	virtual const char* name() const
 	{
-		return (char*)&"09. Moving Bitmaps In 3D Space (s,t,PgUP,PgDOWN,arrows(UP,DOWN))";
+		return "09. Moving Bitmaps In 3D Space (s,t,PgUP,PgDOWN,arrows(UP,DOWN))";
 	}
 	virtual int width() const
 	{

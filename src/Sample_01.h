@@ -21,9 +21,9 @@ public:
 	virtual ~Sample_01();
 
 	virtual void reshape(int width, int height);
-	virtual char* name() const
+	virtual const char* name() const
 	{
-		return (char*)&"01. OpenGL Framework";
+		return "01. OpenGL Framework";
 	}
 	virtual int width() const
 	{

@@ -29,9 +29,9 @@ public:
 	virtual ~Sample_08();
 
 	virtual void reshape(int width, int height);
-	virtual char* name() const
+	virtual const char* name() const
 	{
-		return (char*)&"08. Blending (b,f,l,PgUP,PgDOWN,arrows)";
+		return "08. Blending (b,f,l,PgUP,PgDOWN,arrows)";
 	}
 	virtual int width() const
 	{
