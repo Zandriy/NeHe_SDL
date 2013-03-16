@@ -43,6 +43,8 @@ protected:
 private:
 	enum texFilters {
 		TEX_1,
+		TEX_2,
+		TEX_3,
 		TEX_QTY
 	};
 
@@ -51,6 +53,24 @@ private:
 	GLfloat		m_zrot;			// Z Rotation
 	GLuint		m_texture[TEX_QTY];	// Storage For One Texture
 	OGLImageRec	m_image;
+
+	bool		m_multitextureSupported;	// Flag Indicating Whether Multitexturing Is Supported
+	bool		m_useMultitexture;			// Use It If It Is Supported?
+	GLint		m_maxTexelUnits;			// Number Of Texel-Pipelines. This Is At Least 1.
+
+	GLuint  m_filter;						// Which Filter To Use
+	GLuint  m_bump[TEX_QTY];				// Our Bumpmappings
+	GLuint  m_invbump[TEX_QTY];				// Inverted Bumpmaps
+	GLuint  m_glLogo;						// Handle For OpenGL-Logo
+	GLuint  m_multiLogo;					// Handle For Multitexture-Enabled-Logo
+	static	GLfloat s_LightAmbient[];				// Ambient Light Is 20% White
+	static	GLfloat s_LightDiffuse[];				// Diffuse Light Is White
+	static	GLfloat s_LightPosition[];				// Position Is Somewhat In Front Of Screen
+	static	GLfloat s_Gray[];
+	static	GLfloat s_data[];
+
+	void	initLights();
+	int		loadGLTextures();
 };
 
 #endif /* Sample_22_H_ */

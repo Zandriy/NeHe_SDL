@@ -7,14 +7,79 @@
 
 
 #include "Sample_22.h"
+#include "OGLInspector.h"
+
+#define MAX_EMBOSS (GLfloat)0.01f                       // Maximum Emboss-Translate. Increase To Get Higher Immersion
+#define __ARB_ENABLE true                           // Used To Disable ARB Extensions Entirely
+// #define EXT_INFO                             // Uncomment To See Your Extensions At Start-Up?
+#define MAX_EXTENSION_SPACE 10240                       // Characters For Extension-Strings
+#define MAX_EXTENSION_LENGTH 256                        // Maximum Characters In One Extension-String
+
+
+GLfloat Sample_22::s_LightAmbient[]  = { 0.2f, 0.2f, 0.2f};
+GLfloat Sample_22::s_LightDiffuse[]  = { 1.0f, 1.0f, 1.0f};
+GLfloat Sample_22::s_LightPosition[] = { 0.0f, 0.0f, 2.0f};
+GLfloat Sample_22::s_Gray[]      = { 0.5f, 0.5f, 0.5f, 1.0f};
+
+// Data Contains The Faces Of The Cube In Format 2xTexCoord, 3xVertex.
+// Note That The Tesselation Of The Cube Is Only Absolute Minimum.
+GLfloat Sample_22::s_data[]= {
+		// FRONT FACE
+		0.0f, 0.0f,     -1.0f, -1.0f, +1.0f,
+		1.0f, 0.0f,     +1.0f, -1.0f, +1.0f,
+		1.0f, 1.0f,     +1.0f, +1.0f, +1.0f,
+		0.0f, 1.0f,     -1.0f, +1.0f, +1.0f,
+		// BACK FACE
+		1.0f, 0.0f,     -1.0f, -1.0f, -1.0f,
+		1.0f, 1.0f,     -1.0f, +1.0f, -1.0f,
+		0.0f, 1.0f,     +1.0f, +1.0f, -1.0f,
+		0.0f, 0.0f,     +1.0f, -1.0f, -1.0f,
+		// Top Face
+		0.0f, 1.0f,     -1.0f, +1.0f, -1.0f,
+		0.0f, 0.0f,     -1.0f, +1.0f, +1.0f,
+		1.0f, 0.0f,     +1.0f, +1.0f, +1.0f,
+		1.0f, 1.0f,     +1.0f, +1.0f, -1.0f,
+		// Bottom Face
+		1.0f, 1.0f,     -1.0f, -1.0f, -1.0f,
+		0.0f, 1.0f,     +1.0f, -1.0f, -1.0f,
+		0.0f, 0.0f,     +1.0f, -1.0f, +1.0f,
+		1.0f, 0.0f,     -1.0f, -1.0f, +1.0f,
+		// Right Face
+		1.0f, 0.0f,     +1.0f, -1.0f, -1.0f,
+		1.0f, 1.0f,     +1.0f, +1.0f, -1.0f,
+		0.0f, 1.0f,     +1.0f, +1.0f, +1.0f,
+		0.0f, 0.0f,     +1.0f, -1.0f, +1.0f,
+		// Left Face
+		0.0f, 0.0f,     -1.0f, -1.0f, -1.0f,
+		1.0f, 0.0f,     -1.0f, -1.0f, +1.0f,
+		1.0f, 1.0f,     -1.0f, +1.0f, +1.0f,
+		0.0f, 1.0f,     -1.0f, +1.0f, -1.0f
+};
+
 
 Sample_22::Sample_22()
 :	m_xrot(0.0f)
 ,	m_yrot(0.0f)
 ,	m_zrot(0.0f)
+,	m_multitextureSupported(false)
+,	m_useMultitexture(false)
+,	m_maxTexelUnits(1)
+,	m_filter(1)
+,	m_glLogo(0)
+,	m_multiLogo(0)
 {
 	m_texture[TEX_1] = 0;
-	m_image.loadBMP( "data/nehe.bmp" );
+
+	OGLInspector inspector;
+
+	if (__ARB_ENABLE && inspector.MultiTexSupported() && inspector.TexCombineSupported())
+	{
+#ifdef EXT_INFO
+		printf("The GL_ARB_multitexture extension will be used.");
+#endif
+		m_useMultitexture=true;
+	}
+
 }
 
 Sample_22::~Sample_22()
@@ -105,19 +170,55 @@ void Sample_22::initGL()
 	glDepthFunc(GL_LEQUAL);                         // The Type Of Depth Testing To Do
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);          // Really Nice Perspective
 
-	if (m_texture[TEX_1] == 0)
-		glGenTextures(TEX_QTY, &m_texture[TEX_1]);                  // Create The Texture
-
-	// Typical Texture Generation Using Data From The Bitmap
-	glBindTexture(GL_TEXTURE_2D, m_texture[TEX_1]);
-	// Generate The Texture
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // Linear Filtering
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // Linear Filtering
+	loadGLTextures();
 
 	glPushClientAttrib(GL_ALL_CLIENT_ATTRIB_BITS);
 	// set here client attributes (states)
 }
+
+void Sample_22::initLights()
+{
+	glLightfv(GL_LIGHT1, GL_AMBIENT, s_LightAmbient);              // Load Light-Parameters into GL_LIGHT1
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, s_LightDiffuse);
+	glLightfv(GL_LIGHT1, GL_POSITION, s_LightPosition);
+	glEnable(GL_LIGHT1);
+}
+
+int Sample_22::loadGLTextures()
+{                              // Load Bitmaps And Convert To Textures
+	bool status=true;                           // Status Indicator
+	char *alpha=NULL;
+
+	m_image.loadBMP( "data/Base.bmp" );
+
+	if (m_texture[TEX_1] == 0)
+		glGenTextures(TEX_QTY, &m_texture[TEX_1]);                  // Create Textures
+
+	// Create Nearest Filtered Texture
+	glBindTexture(GL_TEXTURE_2D, m_texture[TEX_1]);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	// Generate The Texture
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+
+	// Create Linear Filtered Texture
+	glBindTexture(GL_TEXTURE_2D, m_texture[TEX_2]);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	// Generate The Texture
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+
+	// Create MipMapped Texture
+	glBindTexture(GL_TEXTURE_2D, m_texture[TEX_3]);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	// Generate The Texture
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, m_image.sizeY(), m_image.sizeY(), GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+
+
+
+}
+
 
 void Sample_22::restoreGL()
 {

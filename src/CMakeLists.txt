@@ -29,6 +29,7 @@ SET(NeHe_PROJECT_SOURCE
 	prg.cpp
 	OGLApplication.cpp
 	OGLConsumer.cpp
+	OGLInspector.cpp
 	Sample_01.cpp
 	Sample_02.cpp
 	Sample_03.cpp
