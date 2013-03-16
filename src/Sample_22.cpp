@@ -78,6 +78,7 @@ Sample_22::Sample_22()
 		printf("The GL_ARB_multitexture extension will be used.");
 #endif
 		m_useMultitexture=true;
+		m_multitextureSupported=true;
 	}
 
 }
@@ -120,38 +121,7 @@ void Sample_22::draw()
 
 	glBindTexture(GL_TEXTURE_2D, m_texture[TEX_1]);               // Select Our Texture
 
-	glBegin(GL_QUADS);
-	// Front Face
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);  // Bottom Left Of The Texture and Quad
-	glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);  // Bottom Right Of The Texture and Quad
-	glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);  // Top Right Of The Texture and Quad
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);  // Top Left Of The Texture and Quad
-	// Back Face
-	glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);  // Bottom Right Of The Texture and Quad
-	glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);  // Top Right Of The Texture and Quad
-	glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);  // Top Left Of The Texture and Quad
-	glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);  // Bottom Left Of The Texture and Quad
-	// Top Face
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);  // Top Left Of The Texture and Quad
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);  // Bottom Left Of The Texture and Quad
-	glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);  // Bottom Right Of The Texture and Quad
-	glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);  // Top Right Of The Texture and Quad
-	// Bottom Face
-	glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);  // Top Right Of The Texture and Quad
-	glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);  // Top Left Of The Texture and Quad
-	glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);  // Bottom Left Of The Texture and Quad
-	glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);  // Bottom Right Of The Texture and Quad
-	// Right face
-	glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);  // Bottom Right Of The Texture and Quad
-	glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);  // Top Right Of The Texture and Quad
-	glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);  // Top Left Of The Texture and Quad
-	glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);  // Bottom Left Of The Texture and Quad
-	// Left Face
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);  // Bottom Left Of The Texture and Quad
-	glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);  // Bottom Right Of The Texture and Quad
-	glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);  // Top Right Of The Texture and Quad
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);  // Top Left Of The Texture and Quad
-	glEnd();
+	doCube();
 
 	m_xrot+=0.3f;                             // X Axis Rotation
 	m_yrot+=0.2f;                             // Y Axis Rotation
@@ -162,18 +132,27 @@ void Sample_22::initGL()
 {
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	// set here server attributes (states)
-	glEnable(GL_TEXTURE_2D);                        // Enable Texture Mapping ( NEW )
-	glShadeModel(GL_SMOOTH);                        // Enable Smooth Shading
-	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);                   // Black Background
-	glClearDepth(1.0f);                         // Depth Buffer Setup
-	glEnable(GL_DEPTH_TEST);                        // Enables Depth Testing
-	glDepthFunc(GL_LEQUAL);                         // The Type Of Depth Testing To Do
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);          // Really Nice Perspective
+	loadGLTextures();				// Jump To Texture Loading Routine
 
-	loadGLTextures();
+	glEnable(GL_TEXTURE_2D);							// Enable Texture Mapping
+	glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
+	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);				// Black Background
+	glClearDepth(1.0f);									// Depth Buffer Setup
+	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
+	glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
+
+	initLights();										// Initialize OpenGL Light
 
 	glPushClientAttrib(GL_ALL_CLIENT_ATTRIB_BITS);
 	// set here client attributes (states)
+}
+
+void Sample_22::restoreGL()
+{
+	// restore server and client attributes (states)
+	glPopClientAttrib();
+	glPopAttrib();
 }
 
 void Sample_22::initLights()
@@ -184,11 +163,11 @@ void Sample_22::initLights()
 	glEnable(GL_LIGHT1);
 }
 
-int Sample_22::loadGLTextures()
+void Sample_22::loadGLTextures()
 {                              // Load Bitmaps And Convert To Textures
-	bool status=true;                           // Status Indicator
 	char *alpha=NULL;
 
+	// Load The Tile-Bitmap For Base-Texture
 	m_image.loadBMP( "data/Base.bmp" );
 
 	if (m_texture[TEX_1] == 0)
@@ -199,30 +178,169 @@ int Sample_22::loadGLTextures()
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	// Generate The Texture
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
 
 	// Create Linear Filtered Texture
 	glBindTexture(GL_TEXTURE_2D, m_texture[TEX_2]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	// Generate The Texture
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
 
 	// Create MipMapped Texture
 	glBindTexture(GL_TEXTURE_2D, m_texture[TEX_3]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	// Generate The Texture
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, m_image.sizeY(), m_image.sizeY(), GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB8, m_image.sizeY(), m_image.sizeY(), GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
 
+	// Load The Bumpmaps
+	m_image.loadBMP( "data/Bump.bmp" );
 
+	glPixelTransferf(GL_RED_SCALE,0.5f);						// Scale RGB By 50%, So That We Have Only
+	glPixelTransferf(GL_GREEN_SCALE,0.5f);						// Half Intenstity
+	glPixelTransferf(GL_BLUE_SCALE,0.5f);
 
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP);	// No Wrapping, Please!
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP);
+	glTexParameterfv(GL_TEXTURE_2D,GL_TEXTURE_BORDER_COLOR,s_Gray);
+
+	if (m_bump[TEX_1] == 0)
+		glGenTextures(TEX_QTY, &m_bump[TEX_1]); 										// Create Three Textures
+
+	// Create Nearest Filtered Texture
+	glBindTexture(GL_TEXTURE_2D, m_bump[TEX_1]);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+
+	// Create Linear Filtered Texture
+	glBindTexture(GL_TEXTURE_2D, m_bump[TEX_2]);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+
+	// Create MipMapped Texture
+	glBindTexture(GL_TEXTURE_2D, m_bump[TEX_3]);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB8, m_image.sizeY(), m_image.sizeY(), GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+
+	for (int i=0; i<3*m_image.sizeY()*m_image.sizeY(); i++)		// Invert The Bumpmap
+		m_image.data()[i]=255-m_image.data()[i];
+
+	if (m_invbump[TEX_1] == 0)
+		glGenTextures(TEX_QTY, &m_invbump[TEX_1]);	// Create Three Textures
+
+	// Create Nearest Filtered Texture
+	glBindTexture(GL_TEXTURE_2D, m_invbump[TEX_1]);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+
+	// Create Linear Filtered Texture
+	glBindTexture(GL_TEXTURE_2D, m_invbump[TEX_2]);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+
+	// Create MipMapped Texture
+	glBindTexture(GL_TEXTURE_2D, m_invbump[TEX_3]);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB8, m_image.sizeY(), m_image.sizeY(), GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+
+	glPixelTransferf(GL_RED_SCALE,1.0f);				// Scale RGB Back To 100% Again
+	glPixelTransferf(GL_GREEN_SCALE,1.0f);
+	glPixelTransferf(GL_BLUE_SCALE,1.0f);
+
+	// Load The Logo-Bitmaps
+	m_image.loadBMP( "data/OpenGL_ALPHA.bmp" );
+
+	alpha=new char[4*m_image.sizeX()*m_image.sizeY()];		// Create Memory For RGBA8-Texture
+	for (int a=0; a<m_image.sizeX()*m_image.sizeY(); a++)
+		alpha[4*a+3]=m_image.data()[a*3];					// Pick Only Red Value As Alpha!
+
+	m_image.loadBMP( "Data/OpenGL.bmp");
+	for (int a=0; a<m_image.sizeX()*m_image.sizeY(); a++) {
+		alpha[4*a]=m_image.data()[a*3];					// R
+		alpha[4*a+1]=m_image.data()[a*3+1];				// G
+		alpha[4*a+2]=m_image.data()[a*3+2];				// B
+	}
+
+	if (m_glLogo == 0)
+		glGenTextures(1, &m_glLogo);				// Create One Textures
+
+	// Create Linear Filtered RGBA8-Texture
+	glBindTexture(GL_TEXTURE_2D, m_glLogo);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, alpha );
+	delete alpha;
+
+	// Load The "Extension Enabled"-Logo
+	m_image.loadBMP( "Data/multi_on_alpha.bmp" );
+	alpha=new char[4*m_image.sizeX()*m_image.sizeY()];		// Create Memory For RGBA8-Texture
+	for (int a=0; a<m_image.sizeX()*m_image.sizeY(); a++)
+		alpha[4*a+3]=m_image.data()[a*3];					// Pick Only Red Value As Alpha!
+
+	m_image.loadBMP( "Data/multi_on.bmp" );
+	for (int a=0; a<m_image.sizeX()*m_image.sizeY(); a++) {
+		alpha[4*a]=m_image.data()[a*3];					// R
+		alpha[4*a+1]=m_image.data()[a*3+1];				// G
+		alpha[4*a+2]=m_image.data()[a*3+2];				// B
+	}
+
+	if (m_multiLogo == 0)
+		glGenTextures(1, &m_multiLogo);						// Create One Textures
+
+	// Create Linear Filtered RGBA8-Texture
+	glBindTexture(GL_TEXTURE_2D, m_multiLogo);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_image.sizeX(), m_image.sizeY(), 0, GL_RGBA, GL_UNSIGNED_BYTE, alpha);
+	delete alpha;
 }
 
-
-void Sample_22::restoreGL()
+void Sample_22::doCube()
 {
-	// restore server and client attributes (states)
-	glPopClientAttrib();
-	glPopAttrib();
+	int i;
+	glBegin(GL_QUADS);
+	// Front Face
+	glNormal3f( 0.0f, 0.0f, +1.0f);
+	for (i=0; i<4; i++) {
+		glTexCoord2f(s_data[5*i],s_data[5*i+1]);
+		glVertex3f(s_data[5*i+2],s_data[5*i+3],s_data[5*i+4]);
+	}
+	// Back Face
+	glNormal3f( 0.0f, 0.0f,-1.0f);
+	for (i=4; i<8; i++) {
+		glTexCoord2f(s_data[5*i],s_data[5*i+1]);
+		glVertex3f(s_data[5*i+2],s_data[5*i+3],s_data[5*i+4]);
+	}
+	// Top Face
+	glNormal3f( 0.0f, 1.0f, 0.0f);
+	for (i=8; i<12; i++) {
+		glTexCoord2f(s_data[5*i],s_data[5*i+1]);
+		glVertex3f(s_data[5*i+2],s_data[5*i+3],s_data[5*i+4]);
+	}
+	// Bottom Face
+	glNormal3f( 0.0f,-1.0f, 0.0f);
+	for (i=12; i<16; i++) {
+		glTexCoord2f(s_data[5*i],s_data[5*i+1]);
+		glVertex3f(s_data[5*i+2],s_data[5*i+3],s_data[5*i+4]);
+	}
+	// Right face
+	glNormal3f( 1.0f, 0.0f, 0.0f);
+	for (i=16; i<20; i++) {
+		glTexCoord2f(s_data[5*i],s_data[5*i+1]);
+		glVertex3f(s_data[5*i+2],s_data[5*i+3],s_data[5*i+4]);
+	}
+	// Left Face
+	glNormal3f(-1.0f, 0.0f, 0.0f);
+	for (i=20; i<24; i++) {
+		glTexCoord2f(s_data[5*i],s_data[5*i+1]);
+		glVertex3f(s_data[5*i+2],s_data[5*i+3],s_data[5*i+4]);
+	}
+	glEnd();
 }

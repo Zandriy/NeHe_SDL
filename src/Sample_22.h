@@ -51,7 +51,6 @@ private:
 	GLfloat		m_xrot;			// X Rotation
 	GLfloat		m_yrot;			// Y Rotation
 	GLfloat		m_zrot;			// Z Rotation
-	GLuint		m_texture[TEX_QTY];	// Storage For One Texture
 	OGLImageRec	m_image;
 
 	bool		m_multitextureSupported;	// Flag Indicating Whether Multitexturing Is Supported
@@ -59,6 +58,7 @@ private:
 	GLint		m_maxTexelUnits;			// Number Of Texel-Pipelines. This Is At Least 1.
 
 	GLuint  m_filter;						// Which Filter To Use
+	GLuint	m_texture[TEX_QTY];				// Storage For Base Textures
 	GLuint  m_bump[TEX_QTY];				// Our Bumpmappings
 	GLuint  m_invbump[TEX_QTY];				// Inverted Bumpmaps
 	GLuint  m_glLogo;						// Handle For OpenGL-Logo
@@ -70,7 +70,8 @@ private:
 	static	GLfloat s_data[];
 
 	void	initLights();
-	int		loadGLTextures();
+	void	loadGLTextures();
+	void	doCube();
 };
 
 #endif /* Sample_22_H_ */
