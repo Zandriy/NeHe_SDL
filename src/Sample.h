@@ -12,6 +12,10 @@
 #include <OpenGL/OpenGL.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
+#ifndef GL_EXT_texture_env_combine
+#define GL_COMBINE_EXT                    0x8570
+#define GL_COMBINE_RGB_EXT                0x8571
+#endif
 #elif	__linux__
 #include <GL/gl.h>
 #include <GL/glu.h>
