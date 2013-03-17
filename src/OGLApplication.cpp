@@ -28,7 +28,7 @@ OGL_Application::OGL_Application()
 ,	m_fullScreen(false)
 {
 	m_sampleNum[0] = '2';
-	m_sampleNum[1] = '1';
+	m_sampleNum[1] = '2';
 }
 
 OGL_Application::~OGL_Application()

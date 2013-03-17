@@ -51,10 +51,16 @@ private:
 	GLfloat		m_xrot;			// X Rotation
 	GLfloat		m_yrot;			// Y Rotation
 	GLfloat		m_zrot;			// Z Rotation
+
+	GLfloat		m_xspeed;
+	GLfloat		m_yspeed;
+	GLfloat		m_z;
+
 	OGLImageRec	m_image;
 
 	bool		m_multitextureSupported;	// Flag Indicating Whether Multitexturing Is Supported
 	bool		m_useMultitexture;			// Use It If It Is Supported?
+	bool		m_emboss;					// Emboss Only, No Basetexture?
 	GLint		m_maxTexelUnits;			// Number Of Texel-Pipelines. This Is At Least 1.
 
 	GLuint  m_filter;						// Which Filter To Use
@@ -72,6 +78,13 @@ private:
 	void	initLights();
 	void	loadGLTextures();
 	void	doCube();
+	void	doLogo();
+	bool	doMesh1TexelUnits();
+	bool	doMesh2TexelUnits();
+	bool	doMeshNoBumps();
+
+	void	VMatMult(GLfloat *M, GLfloat *v);
+	void	SetUpBumps(GLfloat *n, GLfloat *c, GLfloat *l, GLfloat *s, GLfloat *t);
 };
 
 #endif /* Sample_22_H_ */
