@@ -35,6 +35,8 @@ public:
 		return INIT_H;
 	}
 
+	virtual bool sendMessage(int message, int mode, int x, int y);
+
 protected:
 	virtual void draw();
 	virtual void initGL();
@@ -61,6 +63,7 @@ private:
 	bool		m_multitextureSupported;	// Flag Indicating Whether Multitexturing Is Supported
 	bool		m_useMultitexture;			// Use It If It Is Supported?
 	bool		m_emboss;					// Emboss Only, No Basetexture?
+	bool		m_bumps;					// Do Bumpmapping?
 	GLint		m_maxTexelUnits;			// Number Of Texel-Pipelines. This Is At Least 1.
 
 	GLuint  m_filter;						// Which Filter To Use

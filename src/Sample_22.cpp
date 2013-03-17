@@ -8,6 +8,8 @@
 
 #include "Sample_22.h"
 #include "OGLInspector.h"
+
+#include <SDL/SDL.h>
 #include <cmath>
 
 #define MAX_EMBOSS (GLfloat)0.01f                       // Maximum Emboss-Translate. Increase To Get Higher Immersion
@@ -67,6 +69,7 @@ Sample_22::Sample_22()
 ,	m_multitextureSupported(false)
 ,	m_useMultitexture(false)
 ,	m_emboss(false)
+,	m_bumps(true)
 ,	m_maxTexelUnits(1)
 ,	m_filter(1)
 ,	m_glLogo(0)
@@ -115,7 +118,7 @@ void Sample_22::reshape(int width, int height)
 
 void Sample_22::draw()
 {
-	if (1 /*m_bumps*/) {
+	if (m_bumps) {
 		if (m_useMultitexture && m_maxTexelUnits>1)
 			doMesh2TexelUnits();
 		else doMesh1TexelUnits();
@@ -799,4 +802,46 @@ bool Sample_22::doMeshNoBumps()
 	doLogo();
 
 	return true;										// Keep Going
+}
+
+bool Sample_22::sendMessage(int message, int mode, int x, int y)
+{
+	switch (message) {
+	case SDLK_e:
+		m_emboss=!m_emboss;
+		break;
+	case SDLK_m:
+		m_useMultitexture=((!m_useMultitexture) && m_multitextureSupported);
+		break;
+	case SDLK_b:
+		m_bumps=!m_bumps;
+		break;
+	case SDLK_f:
+		m_filter++;
+		m_filter%=3;
+		break;
+	case SDLK_PAGEUP:
+		m_z-=0.02f;
+		break;
+	case SDLK_PAGEDOWN:
+		m_z+=0.02f;
+		break;
+	case SDLK_UP:
+		m_xspeed-=0.01f;
+		break;
+	case SDLK_DOWN:
+		m_xspeed+=0.01f;
+		break;
+	case SDLK_RIGHT:
+		m_yspeed+=0.01f;
+		break;
+	case SDLK_LEFT:
+		m_yspeed-=0.01f;
+		break;
+	default:
+		return false;
+		break;
+	}
+
+	return true;
 }
