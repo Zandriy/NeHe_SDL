@@ -9,7 +9,6 @@
 #define Sample_23_H_
 
 #include "Sample.h"
-#include "OGLImageRec.h"
 
 class Sample_23 : public Sample
 {
@@ -19,9 +18,12 @@ class Sample_23 : public Sample
 	};
 
 	enum texFilters {
-		NEAREST_FILTER,
-		LINEAR_FILTER,
-		MIPMAPPED_FILTER,
+		TEX_1,
+		TEX_2,
+		TEX_3,
+		TEX_4,
+		TEX_5,
+		TEX_6,
 		TEX_QTY
 	};
 public:
@@ -59,7 +61,6 @@ private:
 	GLfloat		m_z;			// Depth Into The Screen
 	GLuint		m_texture[TEX_QTY];	// Storage For One Texture
 	GLuint		m_filter;			// Which Filter To Use
-	OGLImageRec	m_image;
 
 	int m_part1;                    // Start Of Disc
 	int m_part2;                    // End Of Disc
@@ -69,6 +70,7 @@ private:
 	GLuint  m_object;             // Which Object To Draw
 
 	void glDrawCube();
+	void LoadGLTextures();
 };
 
 #endif /* Sample_23_H_ */

@@ -7,6 +7,7 @@
 
 
 #include "Sample_23.h"
+#include "OGLImageRec.h"
 
 #include <SDL/SDL.h>
 
@@ -29,7 +30,6 @@ Sample_23::Sample_23()
 	{
 		m_texture[i] = 0;
 	}
-	m_image.loadBMP( "data/BG.bmp" );
 
 	m_quadratic=gluNewQuadric();          // Create A Pointer To The Quadric Object
 	gluQuadricNormals(m_quadratic, GLU_SMOOTH);   // Create Smooth Normals
@@ -66,98 +66,96 @@ void Sample_23::reshape(int width, int height)
 
 void Sample_23::draw()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear The Screen And The Depth Buffer
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);         // Clear The Screen And The Depth Buffer
+	glLoadIdentity();                           // Reset The View
 
-	glLoadIdentity();                   // Reset The View
-	glTranslatef(0.0f,0.0f,m_z);              // Translate Into The Screen
+	glTranslatef(0.0f,0.0f,m_z);
 
-	glRotatef(m_xrot,1.0f,0.0f,0.0f);             // Rotate On The X Axis
-	glRotatef(m_yrot,0.0f,1.0f,0.0f);             // Rotate On The Y Axis
+	glEnable(GL_TEXTURE_GEN_S);                     // Enable Texture Coord Generation For S ( NEW )
+	glEnable(GL_TEXTURE_GEN_T);                     // Enable Texture Coord Generation For T ( NEW )
 
-	glBindTexture(GL_TEXTURE_2D, m_texture[m_filter]);      // Select A Filtered Texture
-
-	switch(m_object)                      // Check object To Find Out What To Draw
+	glBindTexture(GL_TEXTURE_2D, m_texture[m_filter+(m_filter+1)]);       // This Will Select A Sphere Map
+	glPushMatrix();
+	glRotatef(m_xrot,1.0f,0.0f,0.0f);
+	glRotatef(m_yrot,0.0f,1.0f,0.0f);
+	switch(m_object)
 	{
-	case 0:                         // Drawing Object 1
-		glDrawCube();                   // Draw Our Cube
-		break;                      // Done
-	case 1:                         // Drawing Object 2
-		glTranslatef(0.0f,0.0f,-1.5f);          // Center The Cylinder
-		gluCylinder(m_quadratic,1.0f,1.0f,3.0f,32,32);    // Draw Our Cylinder
-		break;                      // Done
-	case 2:                         // Drawing Object 3
-		gluDisk(m_quadratic,0.5f,1.5f,32,32);     // Draw A Disc (CD Shape)
-		break;                      // Done
-	case 3:                         // Drawing Object 4
-		gluSphere(m_quadratic,1.3f,32,32);        // Draw A Sphere
-		break;                      // Done
-	case 4:                         // Drawing Object 5
-		glTranslatef(0.0f,0.0f,-1.5f);          // Center The Cone
-		gluCylinder(m_quadratic,1.0f,0.0f,3.0f,32,32);    // A Cone With A Bottom Radius Of .5 And A Height Of 2
-		break;                      // Done
-	case 5:                         // Drawing Object 6
-		m_part1+=m_p1;                  // Increase Start Angle
-		m_part2+=m_p2;                  // Increase Sweep Angle
-
-		if(m_part1>359)                    // 360 Degrees
-		{
-			m_p1=0;                   // Stop Increasing Start Angle
-			m_part1=0;                // Set Start Angle To Zero
-			m_p2=1;                   // Start Increasing Sweep Angle
-			m_part2=0;                // Start Sweep Angle At Zero
-		}
-		if(m_part2>359)                    // 360 Degrees
-		{
-			m_p1=1;                   // Start Increasing Start Angle
-			m_p2=0;                   // Stop Increasing Sweep Angle
-		}
-		gluPartialDisk(m_quadratic,0.5f,1.5f,32,32,m_part1,m_part2-m_part1);    // A Disk Like The One Before
-		break;                      // Done
+	case 0:
+		glDrawCube();
+		break;
+	case 1:
+		glTranslatef(0.0f,0.0f,-1.5f);                  // Center The Cylinder
+		gluCylinder(m_quadratic,1.0f,1.0f,3.0f,32,32);            // A Cylinder With A Radius Of 0.5 And A Height Of 2
+		break;
+	case 2:
+		gluSphere(m_quadratic,1.3f,32,32);                // Sphere With A Radius Of 1 And 16 Longitude/Latitude Segments
+		break;
+	case 3:
+		glTranslatef(0.0f,0.0f,-1.5f);                  // Center The Cone
+		gluCylinder(m_quadratic,1.0f,0.0f,3.0f,32,32);            // Cone With A Bottom Radius Of .5 And Height Of 2
+		break;
 	};
 
-	m_xrot+=m_xspeed;                       // Increase Rotation On X Axis
-	m_yrot+=m_yspeed;                       // Increase Rotation On Y Axis
+	glPopMatrix();
+	glDisable(GL_TEXTURE_GEN_S);                        // Disable Texture Coord Generation
+	glDisable(GL_TEXTURE_GEN_T);                        // Disable Texture Coord Generation
+
+	glBindTexture(GL_TEXTURE_2D, m_texture[m_filter*2]);            // This Will Select The BG Texture
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, -24.0f);
+	glBegin(GL_QUADS);
+	glNormal3f( 0.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-13.3f, -10.0f,  10.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f( 13.3f, -10.0f,  10.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f( 13.3f,  10.0f,  10.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-13.3f,  10.0f,  10.0f);
+	glEnd();
+
+	glPopMatrix();
+
+	m_xrot+=m_xspeed;
+	m_yrot+=m_yspeed;
 }
 
 void Sample_23::glDrawCube()
 {
 	glBegin(GL_QUADS);
 	// Front Face
-	glNormal3f( 0.0f, 0.0f, 1.0f);                  // Normal Pointing Towards Viewer
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 1 (Front)
-	glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);  // Point 2 (Front)
-	glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);  // Point 3 (Front)
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 4 (Front)
+	glNormal3f( 0.0f, 0.0f, 0.5f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
 	// Back Face
-	glNormal3f( 0.0f, 0.0f, 1.0f);                  // Normal Pointing Away From Viewer
-	glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);  // Point 1 (Back)
-	glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 2 (Back)
-	glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);  // Point 3 (Back)
-	glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);  // Point 4 (Back)
+	glNormal3f( 0.0f, 0.0f,-0.5f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
 	// Top Face
-	glNormal3f( 0.0f,-1.0f, 0.0f);                  // Normal Pointing Up
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 1 (Top)
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 2 (Top)
-	glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);  // Point 3 (Top)
-	glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);  // Point 4 (Top)
+	glNormal3f( 0.0f, 0.5f, 0.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
 	// Bottom Face
-	glNormal3f( 0.0f, 1.0f, 0.0f);                  // Normal Pointing Down
-	glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);  // Point 1 (Bottom)
-	glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);  // Point 2 (Bottom)
-	glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);  // Point 3 (Bottom)
-	glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 4 (Bottom)
-	// Right face
-	glNormal3f(-1.0f, 0.0f, 0.0f);                  // Normal Pointing Right
-	glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);  // Point 1 (Right)
-	glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);  // Point 2 (Right)
-	glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);  // Point 3 (Right)
-	glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);  // Point 4 (Right)
+	glNormal3f( 0.0f,-0.5f, 0.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+	// Right Face
+	glNormal3f( 0.5f, 0.0f, 0.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
 	// Left Face
-	glNormal3f( 1.0f, 0.0f, 0.0f);                  // Normal Pointing Left
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);  // Point 1 (Left)
-	glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 2 (Left)
-	glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 3 (Left)
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 4 (Left)
+	glNormal3f(-0.5f, 0.0f, 0.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
 	glEnd();
 }
 
@@ -169,26 +167,7 @@ void Sample_23::initGL()
 
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
 
-	if (m_texture[NEAREST_FILTER] == 0)
-		glGenTextures(TEX_QTY, &m_texture[NEAREST_FILTER]);                  // Create The Texture
-
-	// Create Nearest Filtered Texture
-	glBindTexture(GL_TEXTURE_2D, m_texture[NEAREST_FILTER]);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
-
-	// Create Linear Filtered Texture
-	glBindTexture(GL_TEXTURE_2D, m_texture[LINEAR_FILTER]);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
-
-	// Create MipMapped Texture
-	glBindTexture(GL_TEXTURE_2D, m_texture[MIPMAPPED_FILTER]);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, m_image.sizeY(), m_image.sizeY(), GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+	LoadGLTextures();
 
 	// set here server attributes (states)
 	glEnable(GL_TEXTURE_2D);                        // Enable Texture Mapping
@@ -204,8 +183,49 @@ void Sample_23::initGL()
 	glLightfv(GL_LIGHT1, GL_POSITION,LightPosition);            // Position The Light
 	glEnable(GL_LIGHT1);                            // Enable Light One
 
+	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);            // Set The Texture Generation Mode For S To Sphere Mapping
+	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);            // Set The Texture Generation Mode For T To Sphere Mapping
+
 	glPushClientAttrib(GL_ALL_CLIENT_ATTRIB_BITS);
 	// set here client attributes (states)
+}
+
+void Sample_23::LoadGLTextures()                                // Load Bitmaps And Convert To Textures
+{
+	OGLImageRec	*img[2];
+
+	for (int i = 0; i < 2; ++i)
+		img[i] = new OGLImageRec;
+
+	img[0]->loadBMP( "data/BG.bmp" );			// Background Texture
+	img[0]->loadBMP( "data/Reflect.bmp" );		// Reflection Texture (Spheremap)
+
+	if (!m_texture[TEX_1])
+		glGenTextures(TEX_QTY, &m_texture[TEX_1]);                  // Create Three Textures (For Two Images)
+
+	for (int loop=0; loop<2; loop++)
+	{
+		// Create Nearest Filtered Texture
+		glBindTexture(GL_TEXTURE_2D, m_texture[loop]);        // Gen Tex 0 And 1
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, img[loop]->sizeX(), img[loop]->sizeY(),
+				0, GL_RGB, GL_UNSIGNED_BYTE, img[loop]->data());
+
+		// Create Linear Filtered Texture
+		glBindTexture(GL_TEXTURE_2D, m_texture[loop+2]);      // Gen Tex 2, 3 And 4
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, img[loop]->sizeX(), img[loop]->sizeY(),
+				0, GL_RGB, GL_UNSIGNED_BYTE, img[loop]->data());
+
+		// Create MipMapped Texture
+		glBindTexture(GL_TEXTURE_2D, m_texture[loop+4]);      // Gen Tex 4 and 5
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
+		gluBuild2DMipmaps(GL_TEXTURE_2D, 3, img[loop]->sizeX(), img[loop]->sizeY(),
+				GL_RGB, GL_UNSIGNED_BYTE, img[loop]->data());
+	}
 }
 
 void Sample_23::restoreGL()
@@ -233,18 +253,12 @@ bool Sample_23::sendMessage(int message, int mode, int x, int y)
 		break;
 	case SDLK_f:
 		m_filter+=1;              // filter Value Increases By One
-		if (m_filter>=TEX_QTY)                // Is Value Greater Than 2?
-			m_filter=NEAREST_FILTER;           // If So, Set filter To 0
-		if (m_filter == NEAREST_FILTER)
-			printf("Nearest Filtered Texture\n");
-		if (m_filter == LINEAR_FILTER)
-			printf("Linear Filtered Texture\n");
-		if (m_filter == MIPMAPPED_FILTER)
-			printf("MipMapped Filtered Texture\n");
+		if (m_filter>=TEX_QTY)                // Is Value Greater Than 6?
+			m_filter=TEX_1;           // If So, Set filter To 0
 		break;
 	case SDLK_SPACE:
 		m_object++;       // Cycle Through The Objects
-		if(m_object>5)     // Is object Greater Than 5?
+		if(m_object>3)     // Is object Greater Than 5?
 			m_object=0;   // If So, Set To Zero
 		break;
 	case SDLK_PAGEUP:
