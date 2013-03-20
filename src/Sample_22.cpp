@@ -8,6 +8,7 @@
 
 #include "Sample_22.h"
 #include "OGLInspector.h"
+#include "OGLImageRec.h"
 
 #include <SDL/SDL.h>
 #include <cmath>
@@ -82,7 +83,7 @@ Sample_22::Sample_22()
 	if (__ARB_ENABLE && inspector.MultiTexSupported() && inspector.TexCombineSupported())
 	{
 #ifdef EXT_INFO
-		printf("The GL_ARB_multitexture extension will be used.");
+		printf("The GL_ARB_multitexture extension will be used.\n");
 #endif
 		m_useMultitexture=true;
 		m_multitextureSupported=true;
@@ -170,7 +171,8 @@ void Sample_22::loadGLTextures()
 	char *alpha=NULL;
 
 	// Load The Tile-Bitmap For Base-Texture
-	m_image.loadBMP( "s_data/Base.bmp" );
+	OGLImageRec	img;
+	img.loadBMP( "data/Base.bmp" );
 
 	if (m_texture[TEX_1] == 0)
 		glGenTextures(TEX_QTY, &m_texture[TEX_1]);                  // Create Textures
@@ -180,24 +182,24 @@ void Sample_22::loadGLTextures()
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	// Generate The Texture
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, img.sizeX(), img.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, img.data() );
 
 	// Create Linear Filtered Texture
 	glBindTexture(GL_TEXTURE_2D, m_texture[TEX_2]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	// Generate The Texture
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, img.sizeX(), img.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, img.data() );
 
 	// Create MipMapped Texture
 	glBindTexture(GL_TEXTURE_2D, m_texture[TEX_3]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	// Generate The Texture
-	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB8, m_image.sizeY(), m_image.sizeY(), GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB8, img.sizeX(), img.sizeY(), GL_RGB, GL_UNSIGNED_BYTE, img.data() );
 
 	// Load The Bumpmaps
-	m_image.loadBMP( "data/Bump.bmp" );
+	img.loadBMP( "data/Bump.bmp" );
 
 	glPixelTransferf(GL_RED_SCALE,0.5f);						// Scale RGB By 50%, So That We Have Only
 	glPixelTransferf(GL_GREEN_SCALE,0.5f);						// Half Intenstity
@@ -214,22 +216,22 @@ void Sample_22::loadGLTextures()
 	glBindTexture(GL_TEXTURE_2D, m_bump[TEX_1]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, img.sizeX(), img.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, img.data() );
 
 	// Create Linear Filtered Texture
 	glBindTexture(GL_TEXTURE_2D, m_bump[TEX_2]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, img.sizeX(), img.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, img.data() );
 
 	// Create MipMapped Texture
 	glBindTexture(GL_TEXTURE_2D, m_bump[TEX_3]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
-	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB8, m_image.sizeY(), m_image.sizeY(), GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB8, img.sizeX(), img.sizeY(), GL_RGB, GL_UNSIGNED_BYTE, img.data() );
 
-	for (int i=0; i<3*m_image.sizeY()*m_image.sizeY(); i++)		// Invert The Bumpmap
-		m_image.data()[i]=255-m_image.data()[i];
+	for (int i=0; i<3*img.sizeX()*img.sizeY(); i++)		// Invert The Bumpmap
+		img.data()[i]=255-img.data()[i];
 
 	if (m_invbump[TEX_1] == 0)
 		glGenTextures(TEX_QTY, &m_invbump[TEX_1]);	// Create Three Textures
@@ -238,36 +240,36 @@ void Sample_22::loadGLTextures()
 	glBindTexture(GL_TEXTURE_2D, m_invbump[TEX_1]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, img.sizeX(), img.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, img.data() );
 
 	// Create Linear Filtered Texture
 	glBindTexture(GL_TEXTURE_2D, m_invbump[TEX_2]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, img.sizeX(), img.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, img.data() );
 
 	// Create MipMapped Texture
 	glBindTexture(GL_TEXTURE_2D, m_invbump[TEX_3]);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
-	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB8, m_image.sizeY(), m_image.sizeY(), GL_RGB, GL_UNSIGNED_BYTE, m_image.data() );
+	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB8, img.sizeX(), img.sizeY(), GL_RGB, GL_UNSIGNED_BYTE, img.data() );
 
 	glPixelTransferf(GL_RED_SCALE,1.0f);				// Scale RGB Back To 100% Again
 	glPixelTransferf(GL_GREEN_SCALE,1.0f);
 	glPixelTransferf(GL_BLUE_SCALE,1.0f);
 
 	// Load The Logo-Bitmaps
-	m_image.loadBMP( "data/OpenGL_ALPHA.bmp" );
+	img.loadBMP( "data/OpenGL_Alpha.bmp" );
 
-	alpha=new char[4*m_image.sizeX()*m_image.sizeY()];		// Create Memory For RGBA8-Texture
-	for (int a=0; a<m_image.sizeX()*m_image.sizeY(); a++)
-		alpha[4*a+3]=m_image.data()[a*3];					// Pick Only Red Value As Alpha!
+	alpha=new char[4*img.sizeX()*img.sizeY()];		// Create Memory For RGBA8-Texture
+	for (int a=0; a<img.sizeX()*img.sizeY(); ++a)
+		alpha[4*a+3]=img.data()[a*3];					// Pick Only Red Value As Alpha!
 
-	m_image.loadBMP( "Data/OpenGL.bmp");
-	for (int a=0; a<m_image.sizeX()*m_image.sizeY(); a++) {
-		alpha[4*a]=m_image.data()[a*3];					// R
-		alpha[4*a+1]=m_image.data()[a*3+1];				// G
-		alpha[4*a+2]=m_image.data()[a*3+2];				// B
+	img.loadBMP( "data/OpenGL.bmp");
+	for (int a=0; a<img.sizeX()*img.sizeY(); a++) {
+		alpha[4*a]=img.data()[a*3];					// R
+		alpha[4*a+1]=img.data()[a*3+1];				// G
+		alpha[4*a+2]=img.data()[a*3+2];				// B
 	}
 
 	if (m_glLogo == 0)
@@ -277,20 +279,20 @@ void Sample_22::loadGLTextures()
 	glBindTexture(GL_TEXTURE_2D, m_glLogo);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, m_image.sizeY(), m_image.sizeY(), 0, GL_RGB, GL_UNSIGNED_BYTE, alpha );
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, img.sizeX(), img.sizeY(), 0, GL_RGBA, GL_UNSIGNED_BYTE, alpha );
 	delete alpha;
 
 	// Load The "Extension Enabled"-Logo
-	m_image.loadBMP( "Data/multi_on_alpha.bmp" );
-	alpha=new char[4*m_image.sizeX()*m_image.sizeY()];		// Create Memory For RGBA8-Texture
-	for (int a=0; a<m_image.sizeX()*m_image.sizeY(); a++)
-		alpha[4*a+3]=m_image.data()[a*3];					// Pick Only Red Value As Alpha!
+	img.loadBMP( "data/Multi_On_Alpha.bmp" );
+	alpha=new char[4*img.sizeX()*img.sizeY()];		// Create Memory For RGBA8-Texture
+	for (int a=0; a<img.sizeX()*img.sizeY(); a++)
+		alpha[4*a+3]=img.data()[a*3];					// Pick Only Red Value As Alpha!
 
-	m_image.loadBMP( "Data/multi_on.bmp" );
-	for (int a=0; a<m_image.sizeX()*m_image.sizeY(); a++) {
-		alpha[4*a]=m_image.data()[a*3];					// R
-		alpha[4*a+1]=m_image.data()[a*3+1];				// G
-		alpha[4*a+2]=m_image.data()[a*3+2];				// B
+	img.loadBMP( "data/Multi_On.bmp" );
+	for (int a=0; a<img.sizeX()*img.sizeY(); a++) {
+		alpha[4*a]=img.data()[a*3];					// R
+		alpha[4*a+1]=img.data()[a*3+1];				// G
+		alpha[4*a+2]=img.data()[a*3+2];				// B
 	}
 
 	if (m_multiLogo == 0)
@@ -300,7 +302,7 @@ void Sample_22::loadGLTextures()
 	glBindTexture(GL_TEXTURE_2D, m_multiLogo);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_image.sizeX(), m_image.sizeY(), 0, GL_RGBA, GL_UNSIGNED_BYTE, alpha);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, img.sizeX(), img.sizeY(), 0, GL_RGBA, GL_UNSIGNED_BYTE, alpha);
 	delete alpha;
 }
 

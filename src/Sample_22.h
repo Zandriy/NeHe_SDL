@@ -9,7 +9,6 @@
 #define Sample_22_H_
 
 #include "Sample.h"
-#include "OGLImageRec.h"
 
 class Sample_22 : public Sample
 {
@@ -24,7 +23,7 @@ public:
 	virtual void reshape(int width, int height);
 	virtual const char* name() const
 	{
-		return "22. Bump-Mapping, Multi-Texturing & Extensions";
+		return "22. Bump-Mapping, Multi-Texturing & Extensions (e,m,b,f,PageUp,PageDown,arrows)";
 	}
 	virtual int width() const
 	{
@@ -57,8 +56,6 @@ private:
 	GLfloat		m_xspeed;
 	GLfloat		m_yspeed;
 	GLfloat		m_z;
-
-	OGLImageRec	m_image;
 
 	bool		m_multitextureSupported;	// Flag Indicating Whether Multitexturing Is Supported
 	bool		m_useMultitexture;			// Use It If It Is Supported?
