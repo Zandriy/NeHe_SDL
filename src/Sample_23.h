@@ -18,12 +18,12 @@ class Sample_23 : public Sample
 	};
 
 	enum texFilters {
-		TEX_1,
-		TEX_2,
-		TEX_3,
-		TEX_4,
-		TEX_5,
-		TEX_6,
+		NEAREST_FILTER,
+		LINEAR_FILTER,
+		MIPMAPPED_FILTER,
+		NEAREST_FILTER_1,
+		LINEAR_FILTER_1,
+		MIPMAPPED_FILTER_1,
 		TEX_QTY
 	};
 public:

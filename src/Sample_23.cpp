@@ -74,7 +74,7 @@ void Sample_23::draw()
 	glEnable(GL_TEXTURE_GEN_S);                     // Enable Texture Coord Generation For S ( NEW )
 	glEnable(GL_TEXTURE_GEN_T);                     // Enable Texture Coord Generation For T ( NEW )
 
-	glBindTexture(GL_TEXTURE_2D, m_texture[m_filter+(m_filter+1)]);       // This Will Select A Sphere Map
+	glBindTexture(GL_TEXTURE_2D, m_texture[m_filter*2+1]);       // This Will Select A Sphere Map
 	glPushMatrix();
 	glRotatef(m_xrot,1.0f,0.0f,0.0f);
 	glRotatef(m_yrot,0.0f,1.0f,0.0f);
@@ -198,22 +198,22 @@ void Sample_23::LoadGLTextures()                                // Load Bitmaps 
 		img[i] = new OGLImageRec;
 
 	img[0]->loadBMP( "data/BG.bmp" );			// Background Texture
-	img[0]->loadBMP( "data/Reflect.bmp" );		// Reflection Texture (Spheremap)
+	img[1]->loadBMP( "data/Reflect.bmp" );		// Reflection Texture (Spheremap)
 
-	if (!m_texture[TEX_1])
-		glGenTextures(TEX_QTY, &m_texture[TEX_1]);                  // Create Three Textures (For Two Images)
+	if (!m_texture[NEAREST_FILTER])
+		glGenTextures(TEX_QTY, &m_texture[NEAREST_FILTER]);                  // Create Three Textures (For Two Images)
 
-	for (int loop=0; loop<2; loop++)
+	for (int loop=0; loop<2; ++loop)
 	{
 		// Create Nearest Filtered Texture
-		glBindTexture(GL_TEXTURE_2D, m_texture[loop]);        // Gen Tex 0 And 1
+		glBindTexture(GL_TEXTURE_2D, m_texture[loop]);        // Gen Tex 0 and 1
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 		glTexImage2D(GL_TEXTURE_2D, 0, 3, img[loop]->sizeX(), img[loop]->sizeY(),
 				0, GL_RGB, GL_UNSIGNED_BYTE, img[loop]->data());
 
 		// Create Linear Filtered Texture
-		glBindTexture(GL_TEXTURE_2D, m_texture[loop+2]);      // Gen Tex 2, 3 And 4
+		glBindTexture(GL_TEXTURE_2D, m_texture[loop+2]);      // Gen Tex 2 and 3
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, 3, img[loop]->sizeX(), img[loop]->sizeY(),
@@ -252,13 +252,20 @@ bool Sample_23::sendMessage(int message, int mode, int x, int y)
 		}
 		break;
 	case SDLK_f:
-		m_filter+=1;              // filter Value Increases By One
-		if (m_filter>=TEX_QTY)                // Is Value Greater Than 6?
-			m_filter=TEX_1;           // If So, Set filter To 0
+		m_filter++;              // filter Value Increases By One
+		if (m_filter>=MIPMAPPED_FILTER)                // Is Value Greater Than 2?
+			m_filter=NEAREST_FILTER;           // If So, Set filter To 0
+		if (m_filter == NEAREST_FILTER)
+			printf("Nearest Filtered Texture\n");
+		if (m_filter == LINEAR_FILTER)
+			printf("Linear Filtered Texture\n");
+		if (m_filter == MIPMAPPED_FILTER)
+			printf("MipMapped Filtered Texture\n");
+		break;
 		break;
 	case SDLK_SPACE:
 		m_object++;       // Cycle Through The Objects
-		if(m_object>3)     // Is object Greater Than 5?
+		if(m_object>3)     // Is object Greater Than 3?
 			m_object=0;   // If So, Set To Zero
 		break;
 	case SDLK_PAGEUP:
