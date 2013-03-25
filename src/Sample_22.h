@@ -17,6 +17,12 @@ class Sample_22 : public Sample
 		INIT_W = 640,
 		INIT_H = 480
 	};
+	enum textures {
+		TEX_1,
+		TEX_2,
+		TEX_3,
+		TEX_QTY
+	};
 public:
 	Sample_22();
 	virtual ~Sample_22();
@@ -43,12 +49,6 @@ protected:
 	virtual void restoreGL();
 
 private:
-	enum texFilters {
-		TEX_1,
-		TEX_2,
-		TEX_3,
-		TEX_QTY
-	};
 
 	GLfloat		m_xrot;			// X Rotation
 	GLfloat		m_yrot;			// Y Rotation

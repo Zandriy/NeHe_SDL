@@ -81,13 +81,9 @@ Sample_22::Sample_22()
 
 	if (__ARB_ENABLE && inspector.MultiTexSupported() && inspector.TexCombineSupported())
 	{
-#ifdef EXT_INFO
-		printf("The GL_ARB_multitexture extension will be used.");
-#endif
 		m_useMultitexture=true;
 		m_multitextureSupported=true;
 	}
-
 }
 
 Sample_22::~Sample_22()
@@ -148,6 +144,13 @@ void Sample_22::initGL()
 
 	glPushClientAttrib(GL_ALL_CLIENT_ATTRIB_BITS);
 	// set here client attributes (states)
+
+#ifdef EXT_INFO
+	if (m_useMultitexture)
+		printf("The GL_ARB_multitexture extension will be used.\n");
+	else
+		printf("The GL_ARB_multitexture extension won't be used.\n");
+#endif
 }
 
 void Sample_22::restoreGL()
@@ -452,7 +455,6 @@ void Sample_22::doLogo()
 
 bool Sample_22::doMesh1TexelUnits()
 {
-
 	GLfloat c[4]={0.0f,0.0f,0.0f,1.0f};					// Holds Current Vertex
 	GLfloat n[4]={0.0f,0.0f,0.0f,1.0f};					// Normalized Normal Of Current Surface
 	GLfloat s[4]={0.0f,0.0f,0.0f,1.0f};					// s-Texture Coordinate Direction, Normalized
