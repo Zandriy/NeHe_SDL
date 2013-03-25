@@ -52,6 +52,8 @@ SET(NeHe_PROJECT_SOURCE
 	Sample_20.cpp
 	Sample_21.cpp
 	Sample_22.cpp
+	Sample_23.cpp
+	Sample_24.cpp
 )
 
 SET(NeHe_PROJECT_TARGET prg)
