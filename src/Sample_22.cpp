@@ -82,12 +82,9 @@ Sample_22::Sample_22()
 
 	if (__ARB_ENABLE && inspector.MultiTexSupported() && inspector.TexCombineSupported())
 	{
-<<<<<<< HEAD
-=======
 #ifdef EXT_INFO
 		printf("The GL_ARB_multitexture extension will be used.\n");
 #endif
->>>>>>> d90c970700982d02a8da38d537c0b9480b64a21f
 		m_useMultitexture=true;
 		m_multitextureSupported=true;
 	}
@@ -270,7 +267,7 @@ void Sample_22::loadGLTextures()
 	// Load The Logo-Bitmaps
 	img.loadBMP( "data/OpenGL_Alpha.bmp" );
 
-	alpha=new char[4*img.sizeX()*img.sizeY()];		// Create Memory For RGBA8-Texture
+	alpha=new char[4*img.sizeX()*img.sizeY()];		// Create Memory For RGBA-Texture
 	for (int a=0; a<img.sizeX()*img.sizeY(); ++a)
 		alpha[4*a+3]=img.data()[a*3];					// Pick Only Red Value As Alpha!
 
@@ -284,16 +281,16 @@ void Sample_22::loadGLTextures()
 	if (m_glLogo == 0)
 		glGenTextures(1, &m_glLogo);				// Create One Textures
 
-	// Create Linear Filtered RGBA8-Texture
+	// Create Linear Filtered RGBA-Texture
 	glBindTexture(GL_TEXTURE_2D, m_glLogo);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, img.sizeX(), img.sizeY(), 0, GL_RGBA, GL_UNSIGNED_BYTE, alpha );
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.sizeX(), img.sizeY(), 0, GL_RGBA, GL_UNSIGNED_BYTE, alpha );
 	delete alpha;
 
 	// Load The "Extension Enabled"-Logo
 	img.loadBMP( "data/Multi_On_Alpha.bmp" );
-	alpha=new char[4*img.sizeX()*img.sizeY()];		// Create Memory For RGBA8-Texture
+	alpha=new char[4*img.sizeX()*img.sizeY()];		// Create Memory For RGBA-Texture
 	for (int a=0; a<img.sizeX()*img.sizeY(); a++)
 		alpha[4*a+3]=img.data()[a*3];					// Pick Only Red Value As Alpha!
 
@@ -307,11 +304,11 @@ void Sample_22::loadGLTextures()
 	if (m_multiLogo == 0)
 		glGenTextures(1, &m_multiLogo);						// Create One Textures
 
-	// Create Linear Filtered RGBA8-Texture
+	// Create Linear Filtered RGBA-Texture
 	glBindTexture(GL_TEXTURE_2D, m_multiLogo);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, img.sizeX(), img.sizeY(), 0, GL_RGBA, GL_UNSIGNED_BYTE, alpha);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.sizeX(), img.sizeY(), 0, GL_RGBA, GL_UNSIGNED_BYTE, alpha);
 	delete alpha;
 }
 
